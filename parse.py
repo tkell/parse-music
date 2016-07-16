@@ -4,7 +4,11 @@
 import os
 import re
 
+import eyed3
 
+from utils import check_singles
+from utils import check_various_artists
+from utils import check_filetype
 
 class Parser():
     def __init__(self, store, regex):
@@ -36,30 +40,6 @@ def check_store(path, parsers):
         return result[0]
     else:
         return None # panic / disambiguate!
-
-
-
-## Should put these 3 functions somewhere
-def check_singles(path):
-    if path.split(os.path.sep)[-1] == 'Singles':
-        return True
-    else:
-        return False
-
-def check_various_artists(path):
-    folder_name = path.split(os.path.sep)[-1].lower().replace(' ', '')
-    if 'variousartists' in folder_name:
-        return True
-    else:
-        return False
-
-def check_filetype(path)
-    filename = path.split(os.path.sep)[-1].lower()
-    filtype = filename.split('.')[-1]
-    if filetype in ['mp3', 'flac']:
-        return filetype
-    else:
-        return None
 
 def parse_folders(path):
     current_dir = os.getcwd()
@@ -94,11 +74,21 @@ def parse_files(folder_path, parser, various_artists=False):
     return results 
 
 
+def get_tags(filetype, filepath):
+    if filetype == 'mp3':
+        audiofile = eyed3.load(filepath) ### use taglib!
+        artist = audiofile.tag.artist
+        title = audiofile.tag.title
+    elif filetype == 'flac':
+        pass
+
+    return artist, title
+
+
 def parse_file(filepath, parser, various_arists):
 
-    filetype = get_filetype(filepath) 
-    tag_artist = get_tag_artist(filetype, filepath) 
-    tag_title = get_tag_artist(filetype, filepath) 
+    filetype = check_filetype(filepath) 
+    tag_artist, tag_title = get_tags(filetype, filepath) 
     file_artist = parser.get_artist(filepath, various_artists)
     file_title = parser.get_title(filepath, various_artists)
 
