@@ -1,6 +1,18 @@
 #!/usr/bin/env python
 # encoding: utf=8
 
+## singles are Artist - Title (Remix) [Label]
+## albums are Artist - Title [Label]
+## album tracks are Track Number - Title
+## VA albums are Various Artists - Title [Label]
+## VA album tracks are Track Number - Artist - Title
+## Composer albums are Composer - Title (Performer) [Label]
+## composer album tracks are Track Number - Title
+## VA albums with composer tracks are Track Number - Composer - Title (Performer)
+## Performer albums are Performer - Title [Label] 
+## Performer album tracks are Track Number - Title (Composer)
+
+
 import os
 import re
 
