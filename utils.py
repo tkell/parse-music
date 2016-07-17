@@ -1,8 +1,12 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+import os
+
+from tag_utils import get_tags
+from tag_utils import set_tag
+
 ## Utilities, big and small
-from tag_utils impot get_tags
 
 def check_various_artists(path):
     folder_name = path.split(os.path.sep)[-1].lower().replace(' ', '')
@@ -11,7 +15,7 @@ def check_various_artists(path):
     else:
         return False
 
-def check_filetype(path)
+def check_filetype(path):
     filename = path.split(os.path.sep)[-1].lower()
     filtype = filename.split('.')[-1]
     if filetype in ['mp3', 'flac']:
@@ -20,20 +24,19 @@ def check_filetype(path)
         return None
 
 def do_work(tasks):
-    ## returns array of success / fail for each task
-    results = []
     for task in tasks:
         if task[0] == 'rename':
-            task_name, filepath, new_file_name = task
-            r = rename_file(filepath, new_file_name)
+            task_name, filepath, new_filepath  = task
+            print new_filepath
+            # os.rename(filepath, new_filepath)
         if task[0] == 'retag':
-            task_name, filetype, file_artist, file_title = task 
-            r = retag_file(filepath, filetype, file_artist, file_title) 
-    return results
+            task_name, filepath, file_artist, file_title = task 
+            set_tag(filepath, 'artist', file_artist)
+            set_tag(filepath, 'title', file_title)
 
 def make_new_filename(context, data):
     if context == 'single':
-        new_filename = "%s - %s [%s]" % (data['artist'], data['title'], data['label'])
+        new_filename = "%s - %s [%s].%s" % (data['artist'], data['title'], data['label'], data['extension'])
     ## and many more options to come...
 
     return new_filename
@@ -42,8 +45,8 @@ def make_new_filename(context, data):
 def parse_file(filepath, parser, various_artists=False):
     tag_artist, tag_title = get_tags(filepath) 
     file_artist = parser.get_artist_from_file(filepath)
-    file_title = parser.get_title_from_file(filepath))
-    file_label = parser.get_label_from_file(filepath))
+    file_title = parser.get_title_from_file(filepath)
+    file_label = parser.get_label_from_file(filepath)
 
     work = []
 
@@ -53,16 +56,25 @@ def parse_file(filepath, parser, various_artists=False):
         task = ('rename', new_file_name)
         work.append(task)
     else:
-        # If there are no tags, we retag and then rename
+        # If there are tags, we rename
         if tag_artist and tag_title:
-            new_file_name = make_new_filename('single', {'artist': tag_artist, 'title': tag_title})
-            task = ('rename', filepath, new_file_name)
+            ## dodging label issues now, because they are complicated
+            extension = filepath.split('.')[-1]
+            new_file_name = make_new_filename('single', {'artist': tag_artist,
+                                                        'title': tag_title,
+                                                        'label': '',
+                                                        'extension': extension
+                                                        })
+            print new_file_name
+            folder_path = os.path.join(os.path.split(filepath)[0:-1])[0]
+            new_filepath = os.path.join(folder_path, new_file_name)
+            task = ('rename', filepath, new_filepath)
             work.append(task)
-            task = ('retag', filepath, filetype, file_artist, file_title)
+        # if there are no tags, we set the tags, then rename the file.
+        else:
+            task = ('retag', filepath, file_artist, file_title)
             work.append(task)
-        # if there are tags, we rename the file
-        elif f == 't':
-            new_file_name = make_new_filename('single', {'artist': tag_artist, 'title': tag_title})
+            new_file_name = make_new_filename('single', {'artist': tag_artist, 'title': tag_title, 'label': ''})
             task = ('rename', filepath, new_file_name)
             work.append(task)
 

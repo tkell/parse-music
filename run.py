@@ -5,9 +5,9 @@
 Main file that runs both parsing processes
 """
 
-from parse_singles import parse_singles
+from parse_singles import run_singles
 from parse_albums import parse_albums
 
-if __name__ == 'main':
-    parse_singles()
-    parse_albums()
+if __name__ == '__main__':
+    run_singles()
+    # parse_albums()
