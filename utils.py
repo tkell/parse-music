@@ -4,7 +4,7 @@
 import os
 
 from tag_utils import get_tags
-from tag_utils import set_tag
+import tag_utils
 
 ## Utilities, big and small
 
@@ -17,7 +17,7 @@ def check_various_artists(path):
 
 def check_filetype(path):
     filename = path.split(os.path.sep)[-1].lower()
-    filtype = filename.split('.')[-1]
+    filetype = filename.split('.')[-1]
     if filetype in ['mp3', 'flac']:
         return filetype
     else:
@@ -27,12 +27,11 @@ def do_work(tasks):
     for task in tasks:
         if task[0] == 'rename':
             task_name, filepath, new_filepath  = task
-            print new_filepath
-            # os.rename(filepath, new_filepath)
+            os.rename(filepath, new_filepath)
         if task[0] == 'retag':
-            task_name, filepath, file_artist, file_title = task 
-            set_tag(filepath, 'artist', file_artist)
-            set_tag(filepath, 'title', file_title)
+            task_name, filepath, artist, title = task 
+            tag_utils.set_tag(filepath, 'artist', artist)
+            tag_utils.set_tag(filepath, 'title', title)
 
 
 def select_work(filepath, tag_artist, tag_title, file_artist, file_title, new_name_from_file, new_name_from_tag):
@@ -75,7 +74,6 @@ def parse_file(filepath, parser, context):
         file_title = parser.get_field_from_file(filepath, 'title')
         file_label = parser.get_field_from_file(filepath, 'label')
         extension = filepath.split(os.path.sep)[-1].split('.')[-1].lower()
-        print file_label, extension
         new_name_from_file = "%s - %s [%s].%s" % (file_artist, file_title, file_label, extension)
         new_name_from_tag = "%s - %s [%s].%s" % (tag_artist, tag_title, file_label, extension)
     else:
