@@ -19,23 +19,20 @@ class Parser():
         else:
             return False
 
-    def get_artist_from_file(self, path):
+    def get_field_from_file(self, path, field):
         filename = path.split(os.path.sep)[-1]
-        return self.file_regex.match(filename).group('artist')
-
-    def get_title_from_file(self, path):
-        filename = path.split(os.path.sep)[-1]
-        return self.file_regex.match(filename).group('title')
-
-    def get_label_from_file(self, path):
-        filename = path.split(os.path.sep)[-1]
-        return self.file_regex.match(filename).group('title')
+        try:
+            return self.file_regex.match(filename).group(field)
+        except (AttributeError, IndexError):
+            print "---- No data in %s for %s.  Please enter the correct string ----" % (path, field)
+            r = raw_input()
+            return r.strip()
 
 def build_parsers():
     parsers = []
     # name, album_regex, file_regex
     data = [
-            ('thor-test', r'(?P<artist>.+?)_-_(?P<title>.+)', r'(?P<artist>.+?)_-_(?P<title>.+)')
+            ('thor-test', r'(?P<artist>.+?)_-_(?P<title>.+)', r'(?P<artist>.+?)_-_(?P<title>.+?)')
         ]
     for name, album_regex_string, file_regex_string in data:
         p = Parser(name, album_regex_string, file_regex_string)

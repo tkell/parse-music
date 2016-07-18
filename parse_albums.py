@@ -56,6 +56,7 @@ def parse_albums():
     for folder in folders:
         if folder == 'singles':
             continue
-        path, parser, various_artists = parse_folder(folder, parsers) # find all the files, and the flags to parse them
-        tasks = parse_files(path, parser, various_artists) # return a list of tuples of files we need to do things to 
+        folder_path, parser, various_artists = parse_folder(folder, parsers) # find all the files, and the flags to parse them
+        tasks = parse_files(folder_path, parser, various_artists) # return a list of tuples of files we need to do things to 
         success = do_work(tasks) # rename or re-tag the files, as needed.
+        # rename_folder(folder)

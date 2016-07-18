@@ -24,6 +24,7 @@ def parse_singles(filenames, folder_path, parsers):
                     break
             if the_parser == None:
                 # panic!
+                print "NO PARSER FOUND WHAT"
                 pass
 
             filepath = os.path.join(folder_path, filename)
@@ -39,8 +40,9 @@ def run_singles():
     results = parse_singles(singles, singles_path, parsers) # make a list of things to do
     
     tasks = []
+    context = 'single'
     for filepath, parser in results:
-        task = parse_file(filepath, parser)
+        task = parse_file(filepath, parser, context)
         tasks.extend(task)
 
     success = do_work(tasks) # rename or re-tag the files, as needed.

@@ -34,48 +34,53 @@ def do_work(tasks):
             set_tag(filepath, 'artist', file_artist)
             set_tag(filepath, 'title', file_title)
 
-def make_new_filename(context, data):
-    if context == 'single':
-        new_filename = "%s - %s [%s].%s" % (data['artist'], data['title'], data['label'], data['extension'])
-    ## and many more options to come...
 
-    return new_filename
-
-## might split this out, as it and do_work are not really "utils"
-def parse_file(filepath, parser, various_artists=False):
-    tag_artist, tag_title = get_tags(filepath) 
-    file_artist = parser.get_artist_from_file(filepath)
-    file_title = parser.get_title_from_file(filepath)
-    file_label = parser.get_label_from_file(filepath)
-
+def select_work(filepath, tag_artist, tag_title, file_artist, file_title, new_name_from_file, new_name_from_tag):
     work = []
 
     # if they are the same, we just need to rename the file (unless the parser is 'thor')
     if tag_artist == file_artist and tag_title == file_title:
-        new_file_name = make_new_filename('single', {'artist': file_artist, 'title': file_title})
+        new_file_name = new_name_from_file
         task = ('rename', new_file_name)
         work.append(task)
     else:
         # If there are tags, we rename
         if tag_artist and tag_title:
-            ## dodging label issues now, because they are complicated
             extension = filepath.split('.')[-1]
-            new_file_name = make_new_filename('single', {'artist': tag_artist,
-                                                        'title': tag_title,
-                                                        'label': '',
-                                                        'extension': extension
-                                                        })
-            print new_file_name
+            new_file_name = new_name_from_tag
             folder_path = os.path.join(os.path.split(filepath)[0:-1])[0]
             new_filepath = os.path.join(folder_path, new_file_name)
             task = ('rename', filepath, new_filepath)
             work.append(task)
-        # if there are no tags, we set the tags, then rename the file.
+        # if there are no tags, we set the tags, then rename the file
         else:
             task = ('retag', filepath, file_artist, file_title)
             work.append(task)
-            new_file_name = make_new_filename('single', {'artist': tag_artist, 'title': tag_title, 'label': ''})
-            task = ('rename', filepath, new_file_name)
+
+            new_file_name = new_name_from_file
+            folder_path = os.path.join(os.path.split(filepath)[0:-1])[0]
+            new_filepath = os.path.join(folder_path, new_file_name)
+            task = ('rename', filepath, new_file_path)
             work.append(task)
+
+    return work
+
+## might split this out, as it and do_work are not really "utils"
+def parse_file(filepath, parser, context):
+    # The context defines where we get the data we need, and what we might rename the file
+    # It is the parser's job to get the data - if we have to ask the user for it, the parser can do that
+    if context == 'single':
+        tag_artist, tag_title = get_tags(filepath) 
+        file_artist = parser.get_field_from_file(filepath, 'artist')
+        file_title = parser.get_field_from_file(filepath, 'title')
+        file_label = parser.get_field_from_file(filepath, 'label')
+        extension = filepath.split(os.path.sep)[-1].split('.')[-1].lower()
+        print file_label, extension
+        new_name_from_file = "%s - %s [%s].%s" % (file_artist, file_title, file_label, extension)
+        new_name_from_tag = "%s - %s [%s].%s" % (tag_artist, tag_title, file_label, extension)
+    else:
+        pass
+
+    work = select_work(filepath, tag_artist, tag_title, file_artist, file_title, new_name_from_file, new_name_from_tag)
 
     return work
