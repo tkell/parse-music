@@ -28,6 +28,15 @@ class Parser():
             r = raw_input()
             return r.strip()
 
+    def get_field_from_folder(self, path, field):
+        folder_name = path.split(os.path.sep)[-2]
+        try:
+            return self.album_regex.match(folder_name).group(field)
+        except (AttributeError, IndexError):
+            print "---- No data in %s for %s.  Please enter the correct string ----" % (path, field)
+            r = raw_input()
+            return r.strip()
+
 def build_parsers():
     parsers = []
     # name, album_regex, file_regex
