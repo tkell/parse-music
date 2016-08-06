@@ -89,8 +89,8 @@ def parse_file(filepath, parser, context, track_number=None, album_info=None):
         file_title = parser.get_field_from_file(filepath, 'title')
         file_label = album_info['label']
         extension = filepath.split(os.path.sep)[-1].split('.')[-1].lower()
-        new_name_from_file = "%s - %s.%s" % (track_number, file_title, extension)
-        new_name_from_tag = "%s - %s.%s" % (track_number, tag_title, extension)
+        new_name_from_file = "%02d - %s.%s" % (track_number, file_title, extension)
+        new_name_from_tag = "%02d - %s.%s" % (track_number, tag_title, extension)
     else:
         pass
 
