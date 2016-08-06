@@ -15,7 +15,7 @@ from parser import build_parsers
 def parse_singles(filenames, folder_path, parsers):
     results = []
     for filename in filenames:
-        if '.mp3' in filename or '.flac' in filename:
+        if '.mp3' in filename.lower() or '.flac' in filename.lower():
             # pick parser
             the_parser = None
             for parser in parsers:

@@ -32,7 +32,7 @@ def build_parsers():
     parsers = []
     # name, album_regex, file_regex
     data = [
-            ('thor-test', r'(?P<artist>.+?)_-_(?P<title>.+)', r'(?P<artist>.+?)_-_(?P<title>.+?)')
+            ('thor-test', r'(?P<artist>.+?)_-_(?P<title>.+)', r'\d+?_-_(?P<artist>.+?)_-_(?P<title>.+?)\.(.+?)')
         ]
     for name, album_regex_string, file_regex_string in data:
         p = Parser(name, album_regex_string, file_regex_string)

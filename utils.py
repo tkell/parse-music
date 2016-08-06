@@ -37,7 +37,7 @@ def do_work(tasks):
 def select_work(filepath, tag_artist, tag_title, file_artist, file_title, new_name_from_file, new_name_from_tag):
     work = []
 
-    # if they are the same, we just need to rename the file (unless the parser is 'thor')
+    # if they are the same, we just need to rename the file
     if tag_artist == file_artist and tag_title == file_title:
         new_file_name = new_name_from_file
         task = ('rename', new_file_name)
