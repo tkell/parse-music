@@ -12,7 +12,6 @@ class Parser():
 
     def match_store(self, path, source):
         filename = path.split(os.path.sep)[-1]
-        print filename, source
         if source == 'album' and self.album_regex.search(filename):
             return True
         elif source == 'file' and self.file_regex.match(filename):
