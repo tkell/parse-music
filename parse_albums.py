@@ -19,8 +19,9 @@
 import os
 import re
 
+from parser import build_parsers
 from utils import get_context
-from utils import check_filetype
+from utils import parse_file
 
 def parse_folders(path):
     current_dir = os.getcwd()
@@ -36,31 +37,42 @@ def parse_folders(path):
 
 def parse_folder(path, parsers):
     context = get_context(path)
-    store_parser = check_store(path, parsers)
-    if store_parser == None:
+
+    parser = None
+    for p in parsers:
+        if p.match_store(path, source='album'):
+            parser = p
+            break
+    if parser == None:
         # Eventually we'll deal with errors here,
         # allow the user to enter a store manually, etc
         print "Panic!  No parser found"
-        return None
+    else:
+        album_info = {}
+        album_info['artist'] = parser.get_field_from_album(path, 'artist')
+        album_info['title'] = parser.get_field_from_album(path, 'album_title')
+        album_info['label'] = parser.get_field_from_album(path, 'label')
 
-    return path, store_parser, context
+    return path, parser, context, album_info
 
-def parse_files(folder_path, parser, various_artists=False):
+def parse_files(folder_path, parser, context, album_info):
     results = []
-    for filename in os.listdir(folder_path):
+    # We assume that the files are in the correct order
+    for index, filename in enumerate(os.listdir(folder_path)):
         filepath = folder_path + os.path.sep + filename
-        r = parse_file(filepath, parser, 'regular_album')
+        track_number = index + 1
+        r = parse_file(filepath, parser, 'regular_album', track_number, album_info)
         results.extend(r)
-
     return results 
 
 def parse_albums():
     parsers = build_parsers() # make the objects that pick the store, do lots of other things
     folders = parse_folders('.') # find all the folders we need 
     for folder in folders:
+        print folder
         if folder in ['singles', 'tests']:
             continue
-        folder_path, parser, context = parse_folder(folder, parsers) # find all the files, and the flags to parse them
-        tasks = parse_files(folder_path, parser, context) # return a list of tuples of files we need to do things to 
+        folder_path, parser, context, album_info = parse_folder(folder, parsers) # find all the files, and the flags to parse them
+        tasks = parse_files(folder_path, parser, context, album_info) # return a list of tuples of files we need to do things to 
         success = do_work(tasks) # rename or re-tag the files, as needed.
-        # rename_folder(folder)
+        # rename_folder(folder_path, album_info) # very last!

@@ -12,6 +12,7 @@ class Parser():
 
     def match_store(self, path, source):
         filename = path.split(os.path.sep)[-1]
+        print filename, source
         if source == 'album' and self.album_regex.search(filename):
             return True
         elif source == 'file' and self.file_regex.match(filename):
@@ -20,6 +21,7 @@ class Parser():
             return False
 
     def get_field_from_file(self, path, field):
+        # Give this the file path
         filename = path.split(os.path.sep)[-1]
         try:
             return self.file_regex.match(filename).group(field)
@@ -28,8 +30,9 @@ class Parser():
             r = raw_input()
             return r.strip()
 
-    def get_field_from_folder(self, path, field):
-        folder_name = path.split(os.path.sep)[-2]
+    def get_field_from_album(self, path, field):
+        # Give this the album path
+        folder_name = path.split(os.path.sep)[-1]
         try:
             return self.album_regex.match(folder_name).group(field)
         except (AttributeError, IndexError):
@@ -40,8 +43,13 @@ class Parser():
 def build_parsers():
     parsers = []
     # name, album_regex, file_regex
+    ## Will we need a 'single regex'?  Will depend on the store, I betcha =\
     data = [
-            ('thor-test', r'(?P<artist>.+?)_-_(?P<title>.+)', r'\d+?_-_(?P<artist>.+?)_-_(?P<title>.+?)\.(.+?)')
+            (
+             'thor-test', 
+             r'(?P<album_title>.+?)--(?P<artist>.+?)--(?P<label>.+?)',
+             r'\d\d--(?P<title>.+?)\.(.+?)'
+            )
         ]
     for name, album_regex_string, file_regex_string in data:
         p = Parser(name, album_regex_string, file_regex_string)

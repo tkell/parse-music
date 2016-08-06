@@ -70,10 +70,11 @@ def select_work(filepath, tag_artist, tag_title, file_artist, file_title, new_na
     return work
 
 ## might split this out, as it and do_work are not really "utils"
-def parse_file(filepath, parser, context):
+def parse_file(filepath, parser, context, track_number=None, album_info=None):
     ## This is where I was going to deal with the shit, basically - using context as a switch
     # The context defines where we get the data we need, and what we might rename the file
     # It is the parser's job to get the data - if we have to ask the user for it, the parser can do that
+    # should I have one parser per store per context?  Or just two per store albums / singles?
     if context == 'single':
         tag_artist, tag_title = get_tags(filepath) 
         file_artist = parser.get_field_from_file(filepath, 'artist')
@@ -84,12 +85,12 @@ def parse_file(filepath, parser, context):
         new_name_from_tag = "%s - %s [%s].%s" % (tag_artist, tag_title, file_label, extension)
     elif context == "regular_album":
         tag_artist, tag_title = get_tags(filepath)
-        file_artist = parser.get_field_from_folder(filepath, 'artist')
+        file_artist = album_info['artist']
         file_title = parser.get_field_from_file(filepath, 'title')
-        file_label = parser.get_field_from_folder(filepath, 'label')
+        file_label = album_info['label']
         extension = filepath.split(os.path.sep)[-1].split('.')[-1].lower()
-        new_name_from_file = "%s - %s [%s].%s" % (file_artist, file_title, file_label, extension)
-        new_name_from_tag = "%s - %s [%s].%s" % (tag_artist, tag_title, file_label, extension)
+        new_name_from_file = "%s - %s.%s" % (track_number, file_title, extension)
+        new_name_from_tag = "%s - %s.%s" % (track_number, tag_title, extension)
     else:
         pass
 
