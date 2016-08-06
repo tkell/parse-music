@@ -15,13 +15,13 @@
 ## Performer albums are Performer - Title [Label] 
 ## Performer album tracks are Track Number - Title (Composer)
 
-
 import os
 import re
 
 from parser import build_parsers
 from utils import get_context
-from utils import parse_file
+from work_utils import parse_file
+from work_utils import do_work
 
 def parse_folders(path):
     current_dir = os.getcwd()
@@ -65,12 +65,11 @@ def parse_files(folder_path, parser, context, album_info):
         results.extend(r)
     return results 
 
-def parse_albums():
+def parse_albums(starting_folder):
     parsers = build_parsers() # make the objects that pick the store, do lots of other things
-    folders = parse_folders('.') # find all the folders we need 
+    folders = parse_folders(starting_folder) # find all the folders we need 
     for folder in folders:
-        print folder
-        if folder in ['singles', 'tests']:
+        if folder in ['singles']:
             continue
         folder_path, parser, context, album_info = parse_folder(folder, parsers) # find all the files, and the flags to parse them
         tasks = parse_files(folder_path, parser, context, album_info) # return a list of tuples of files we need to do things to 

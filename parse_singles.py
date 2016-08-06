@@ -32,10 +32,9 @@ def parse_singles(filenames, folder_path, parsers):
 
     return results
 
-def run_singles():
+def run_singles(starting_folder):
     parsers = build_parsers() # make the objects that pick the store, do lots of other things
-    current_dir = os.getcwd()
-    singles_path = os.path.join(current_dir, 'singles')
+    singles_path = starting_folder + os.path.sep + 'singles'
     singles = os.listdir(singles_path)
     results = parse_singles(singles, singles_path, parsers) # make a list of things to do
     
