@@ -6,8 +6,8 @@
 import os
 import re
 
-from utils import do_work
-from utils import parse_file
+from work_utils import do_work
+from work_utils import parse_file
 from tag_utils import get_tags
 
 from parser import build_parsers

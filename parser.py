@@ -45,9 +45,9 @@ def build_parsers():
     ## Will we need a 'single regex'?  Will depend on the store, I betcha =\
     data = [
             (
-             'thor-test', 
-             r'(?P<album_title>.+?)--(?P<artist>.+?)--(?P<label>.+?)',
-             r'\d\d--(?P<title>.+?)\.(.+?)'
+             'bleep', 
+             r'',
+             r'(?P<album_title>.+?)-\d\d\d-(?P<artist>.+?)-(?P<title>.+?)\.(.+?)'
             )
         ]
     for name, album_regex_string, file_regex_string in data:

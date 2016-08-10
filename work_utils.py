@@ -40,7 +40,7 @@ def select_work(filepath, tag_artist, tag_title, file_artist, file_title, new_na
         new_file_name = new_name_from_file
         folder_path = os.path.join(os.path.split(filepath)[0:-1])[0]
         new_filepath = os.path.join(folder_path, new_file_name)
-        task = ('rename', filepath, new_file_name)
+        task = ('rename', filepath, new_filepath)
         work.append(task)
     else:
         # If there are tags, we rename based on the tag:w
