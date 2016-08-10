@@ -2,6 +2,7 @@
 # encoding: utf-8
 
 import os
+import shutil
 
 def check_various_artists(path):
     folder_name = path.split(os.path.sep)[-1].lower().replace(' ', '')
@@ -23,3 +24,13 @@ def get_context(path):
     ## but for now:
     return 'regular_album'
 
+def move_items(starting_path, ending_path):
+    # Take folders, mp3s, and flacs, and move them.  Ignore folders name 'singles'
+    for filename in os.listdir(starting_path):
+        filepath = os.path.join(starting_path, filename)
+        ending_filepath = os.path.join(ending_path, filename)
+        print starting_path, filepath, ending_filepath
+        if os.path.isdir(filepath) and filename != 'singles':
+            shutil.move(filepath, ending_filepath)
+        elif '.mp3' in filename.lower() or '.flac' in filename.lower():
+            shutil.move(filepath, ending_filepath)

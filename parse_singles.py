@@ -6,6 +6,7 @@
 import os
 import re
 
+from utils import move_items
 from work_utils import do_work
 from work_utils import parse_file
 from tag_utils import get_tags
@@ -32,11 +33,10 @@ def parse_singles(filenames, folder_path, parsers):
 
     return results
 
-def run_singles(starting_folder):
+def parse_singles(starting_folder, ending_folder):
     parsers = build_parsers() # make the objects that pick the store, do lots of other things
-    singles_path = starting_folder + os.path.sep + 'singles'
-    singles = os.listdir(singles_path)
-    results = parse_singles(singles, singles_path, parsers) # make a list of things to do
+    singles = os.listdir(starting_folder)
+    results = parse_singles(singles, starting_folder, parsers) # make a list of things to do
     
     tasks = []
     context = 'single'
@@ -45,3 +45,4 @@ def run_singles(starting_folder):
         tasks.extend(task)
 
     success = do_work(tasks) # rename or re-tag the files, as needed.
+    move_items(starting_folder, ending_folder)

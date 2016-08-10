@@ -1,3 +1,7 @@
 singles
 .cache
 *.pyc
+*.ipynb_*
+*.ipynb
+
+

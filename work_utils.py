@@ -73,3 +73,5 @@ def do_work(tasks):
             task_name, filepath, artist, title = task 
             tag_utils.set_tag(filepath, 'artist', artist)
             tag_utils.set_tag(filepath, 'title', title)
+
+    return True ## Catch exceptions here, as they show up.

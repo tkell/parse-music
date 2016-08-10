@@ -20,6 +20,7 @@ import re
 
 from parser import build_parsers
 from utils import get_context
+from utils import move_items
 from work_utils import parse_file
 from work_utils import do_work
 
@@ -68,7 +69,7 @@ def parse_files(folder_path, parser, context, album_info):
         results.extend(r)
     return results 
 
-def parse_albums(starting_folder):
+def parse_albums(starting_folder, ending_folder):
     parsers = build_parsers() # make the objects that pick the store, do lots of other things
     folders = parse_folders(starting_folder) # find all the folders we need 
     for folder in folders:
@@ -76,3 +77,4 @@ def parse_albums(starting_folder):
         tasks = parse_files(folder_path, parser, context, album_info) # return a list of tuples of files we need to do things to 
         success = do_work(tasks) # rename or re-tag the files, as needed.
         # rename_folder(folder_path, album_info) # very last!
+    move_items(starting_folder, ending_folder)
