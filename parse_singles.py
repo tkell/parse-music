@@ -13,7 +13,7 @@ from tag_utils import get_tags
 
 from parser import build_parsers
 
-def parse_singles(filenames, folder_path, parsers):
+def parse_files(filenames, folder_path, parsers):
     results = []
     for filename in filenames:
         if '.mp3' in filename.lower() or '.flac' in filename.lower():
@@ -36,7 +36,7 @@ def parse_singles(filenames, folder_path, parsers):
 def parse_singles(starting_folder, ending_folder):
     parsers = build_parsers() # make the objects that pick the store, do lots of other things
     singles = os.listdir(starting_folder)
-    results = parse_singles(singles, starting_folder, parsers) # make a list of things to do
+    results = parse_files(singles, starting_folder, parsers) # make a list of things to do
     
     tasks = []
     context = 'single'

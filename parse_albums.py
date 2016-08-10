@@ -16,6 +16,7 @@
 ## Performer album tracks are Track Number - Title (Composer)
 
 import os
+import shutil
 import re
 
 from parser import build_parsers
@@ -51,7 +52,7 @@ def parse_folder(path, parsers):
     else:
         album_info = {}
         album_info['artist'] = parser.get_field_from_album(path, 'artist')
-        album_info['title'] = parser.get_field_from_album(path, 'album_title')
+        album_info['album_title'] = parser.get_field_from_album(path, 'album_title')
         album_info['label'] = parser.get_field_from_album(path, 'label')
 
     return path, parser, context, album_info
@@ -69,6 +70,16 @@ def parse_files(folder_path, parser, context, album_info):
         results.extend(r)
     return results 
 
+def rename_folder(folder_path, context, album_info):
+    if context == "regular_album":
+        artist = album_info['artist']
+        title = album_info['album_title']
+        label = album_info['label']
+        new_folder_name = "%s - %s [%s]" % (artist, title, label)
+        path = os.path.dirname(folder_path)
+        new_path = os.path.join(path, new_folder_name)
+        shutil.move(folder_path, new_path)
+
 def parse_albums(starting_folder, ending_folder):
     parsers = build_parsers() # make the objects that pick the store, do lots of other things
     folders = parse_folders(starting_folder) # find all the folders we need 
@@ -76,5 +87,5 @@ def parse_albums(starting_folder, ending_folder):
         folder_path, parser, context, album_info = parse_folder(folder, parsers) # find all the files, and the flags to parse them
         tasks = parse_files(folder_path, parser, context, album_info) # return a list of tuples of files we need to do things to 
         success = do_work(tasks) # rename or re-tag the files, as needed.
-        # rename_folder(folder_path, album_info) # very last!
+        rename_folder(folder_path, context, album_info) # very last!
     move_items(starting_folder, ending_folder)

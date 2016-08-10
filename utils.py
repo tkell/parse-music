@@ -29,7 +29,6 @@ def move_items(starting_path, ending_path):
     for filename in os.listdir(starting_path):
         filepath = os.path.join(starting_path, filename)
         ending_filepath = os.path.join(ending_path, filename)
-        print starting_path, filepath, ending_filepath
         if os.path.isdir(filepath) and filename != 'singles':
             shutil.move(filepath, ending_filepath)
         elif '.mp3' in filename.lower() or '.flac' in filename.lower():
