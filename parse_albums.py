@@ -24,15 +24,13 @@ from work_utils import parse_file
 from work_utils import do_work
 
 def parse_folders(path):
-    current_dir = os.getcwd()
     files = os.listdir(path)
 
     results = []
     for filename in files:
-        filepath = current_dir + os.path.sep + filename
-        if os.path.isdir(filepath) and filename[0] != '.':
+        filepath = path + os.path.sep + filename
+        if os.path.isdir(filepath) and filename != 'singles' and filename[0] != '.':
             results.append(filepath)
-
     return results 
 
 def parse_folder(path, parsers):
@@ -40,7 +38,9 @@ def parse_folder(path, parsers):
 
     parser = None
     for p in parsers:
-        if p.match_store(path, source='album'):
+        album_string = path.split(os.path.sep)[-1]
+        print album_string
+        if p.match_store(album_string, source='album'):
             parser = p
             break
     if parser == None:
@@ -59,6 +59,9 @@ def parse_files(folder_path, parser, context, album_info):
     results = []
     # We assume that the files are in the correct order
     for index, filename in enumerate(os.listdir(folder_path)):
+        if 'mp3' not in filename.lower() and 'flac' not in filename.lower():
+            continue
+
         filepath = folder_path + os.path.sep + filename
         track_number = index + 1
         r = parse_file(filepath, parser, 'regular_album', track_number, album_info)
@@ -69,8 +72,6 @@ def parse_albums(starting_folder):
     parsers = build_parsers() # make the objects that pick the store, do lots of other things
     folders = parse_folders(starting_folder) # find all the folders we need 
     for folder in folders:
-        if folder in ['singles']:
-            continue
         folder_path, parser, context, album_info = parse_folder(folder, parsers) # find all the files, and the flags to parse them
         tasks = parse_files(folder_path, parser, context, album_info) # return a list of tuples of files we need to do things to 
         success = do_work(tasks) # rename or re-tag the files, as needed.

@@ -46,8 +46,8 @@ def build_parsers():
     data = [
             (
              'bleep', 
-             r'',
-             r'(?P<album_title>.+?)-\d\d\d-(?P<artist>.+?)-(?P<title>.+?)\.(.+?)'
+             r'(?P<artist>.+?) - (?P<album_title>.+?) - (?P<extension>.+?)',
+             r'(?P<album_title>.+?)-\d\d\d-(?P<artist>.+?)-(?P<title>.+?)\.(?P<extension>.+?)'
             )
         ]
     for name, album_regex_string, file_regex_string in data:
