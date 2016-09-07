@@ -25,7 +25,7 @@ def parse_files(filenames, folder_path, parsers):
                     break
             if the_parser == None:
                 # panic!
-                print "NO PARSER FOUND WHAT"
+                print("NO PARSER FOUND WHAT")
                 pass
 
             filepath = os.path.join(folder_path, filename)

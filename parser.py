@@ -25,7 +25,7 @@ class Parser():
         try:
             return self.file_regex.match(filename).group(field)
         except (AttributeError, IndexError):
-            print "---- No data in %s for %s.  Please enter the correct string ----" % (path, field)
+            print("---- No data in %s for %s.  Please enter the correct string ----" % (path, field))
             r = raw_input()
             return r.strip()
 
@@ -35,7 +35,7 @@ class Parser():
         try:
             return self.album_regex.match(folder_name).group(field)
         except (AttributeError, IndexError):
-            print "---- No data in %s for %s.  Please enter the correct string ----" % (path, field)
+            print("---- No data in %s for %s.  Please enter the correct string ----" % (path, field))
             r = raw_input()
             return r.strip()
 
@@ -57,17 +57,16 @@ def build_parsers():
             ),
             # www.bandcamp.com
             (
-            'bandcamp',
-            r'NO EXAMPLES YET', 
-            r'(?P<artist>.+?) - (?P<title>.+?)\.(?P<extension>.+?)'
-            )
+              'bandcamp',
+              r'NO EXAMPLES YET', 
+              r'(?P<artist>.+?) - (?P<title>.+?)\.(?P<extension>.+?)'
+            ),
             # www.boomkat.com
             (
-            'boomkat',
-            r'(?P<album_title>.+?)'
-            r'NO EXAMPLES YET', 
-            )
-
+              'boomkat',
+              r'(?P<album_title>.+?)',
+              r'NO EXAMPLES YET', 
+            ),
         ]
     for name, album_regex_string, file_regex_string in data:
         p = Parser(name, album_regex_string, file_regex_string)

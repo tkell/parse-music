@@ -41,14 +41,14 @@ def parse_folder(path, parsers):
     parser = None
     for p in parsers:
         album_string = path.split(os.path.sep)[-1]
-        print album_string
+        print(album_string)
         if p.match_store(album_string, source='album'):
             parser = p
             break
     if parser == None:
         # Eventually we'll deal with errors here,
         # allow the user to enter a store manually, etc
-        print "Panic!  No parser found"
+        print("Panic!  No parser found")
     else:
         album_info = {}
         album_info['artist'] = parser.get_field_from_album(path, 'artist')
