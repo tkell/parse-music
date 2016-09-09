@@ -2,26 +2,26 @@
 # encoding: utf=8
 
 ## Utils for reading and setting tags
-import taglib
+import mutagen
 
 def get_tags(filepath):
-    f = taglib.File(filepath)
+    f = mutagen.File(filepath)
 
     try:
-        artist = f.tags['ARTIST'][0]
+        artist = f.tags['artist'][0]
     except KeyError:
         artist = None
 
     try:
-        title = f.tags['TITLE'][0]
+        title = f.tags['title'][0]
     except KeyError:
         title = None
 
     return artist, title
 
 def set_tag(filepath, tag_name, tag_content):
-    f = taglib.File(filepath)
-    tag_name = tag_name.upper()
-    f.tags[tag_name] = tag_content
+    f = mutagen.File(filepath)
+    tag_name = tag_name.lower()
+    f[tag_name] = tag_content
     f.save()
 

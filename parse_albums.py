@@ -60,12 +60,13 @@ def parse_folder(path, parsers):
 def parse_files(folder_path, parser, context, album_info):
     results = []
     # We assume that the files are in the correct order
+    track_number = 1
     for index, filename in enumerate(os.listdir(folder_path)):
         if 'mp3' not in filename.lower() and 'flac' not in filename.lower():
             continue
 
         filepath = folder_path + os.path.sep + filename
-        track_number = index + 1
+        track_number = track_number + 1
         r = parse_file(filepath, parser, 'regular_album', track_number, album_info)
         results.extend(r)
     return results 

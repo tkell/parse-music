@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+
 import os
 import tag_utils
 
@@ -38,16 +39,16 @@ def select_work(filepath, tag_artist, tag_title, file_artist, file_title, new_na
     # if they are the same, we just need to rename the file
     if tag_artist == file_artist and tag_title == file_title:
         new_file_name = new_name_from_file
-        folder_path = os.path.join(os.path.split(filepath)[0:-1])[0]
+        folder_path = os.path.split(filepath)[0:-1][0]
         new_filepath = os.path.join(folder_path, new_file_name)
         task = ('rename', filepath, new_filepath)
         work.append(task)
     else:
-        # If there are tags, we rename based on the tag:w
+        # If there are tags, we rename based on the tag
         if tag_artist and tag_title:
             extension = filepath.split('.')[-1]
             new_file_name = new_name_from_tag
-            folder_path = os.path.join(os.path.split(filepath)[0:-1])[0]
+            folder_path = os.path.split(filepath)[0:-1][0]
             new_filepath = os.path.join(folder_path, new_file_name)
             task = ('rename', filepath, new_filepath)
             work.append(task)
