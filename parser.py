@@ -43,10 +43,7 @@ def build_parsers():
     parsers = []
     # name, album_regex, file_regex
     ## Will we need a 'single regex'?  Will depend on the store, I betcha =\
-    # need to add Bandcamp and Boomkat, in that order.
-    # boomkat is trouble, as it is just the album name, with underscores.  
-    # Do I need to, ugh, make a list of filters that these go through?  
-    # an underscore-to-spaces too, for example?
+    # boomkat is trouble, and should be avoided
 
     data = [
             # www.bleep.com
@@ -60,12 +57,6 @@ def build_parsers():
               'bandcamp',
               r'NO EXAMPLES YET', 
               r'(?P<artist>.+?) - (?P<title>.+?)\.(?P<extension>.+?)'
-            ),
-            # www.boomkat.com
-            (
-              'boomkat',
-              r'(?P<album_title>.+?)',
-              r'NO EXAMPLES YET', 
             ),
         ]
     for name, album_regex_string, file_regex_string in data:

@@ -9,5 +9,5 @@ from parse_singles import parse_singles
 from parse_albums import parse_albums
 
 if __name__ == '__main__':
-    parse_singles('/Users/thor/Desktop/unparsed/singles', '/Users/thor/Desktop/parsed')
-    # parse_albums('/Users/thor/Desktop/unparsed', '/Users/thor/Desktop/parsed')
+    parse_singles('/Users/thor/Desktop/unparsed/singles', '/Users/thor/Desktop/parsed/singles')
+    parse_albums('/Users/thor/Desktop/unparsed', '/Users/thor/Desktop/parsed')
