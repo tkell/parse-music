@@ -26,7 +26,7 @@ class Parser():
             return self.file_regex.match(filename).group(field)
         except (AttributeError, IndexError):
             print("---- No data in %s for %s.  Please enter the correct string ----" % (path, field))
-            r = raw_input()
+            r = input()
             return r.strip()
 
     def get_field_from_album(self, path, field):
@@ -36,7 +36,7 @@ class Parser():
             return self.album_regex.match(folder_name).group(field)
         except (AttributeError, IndexError):
             print("---- No data in %s for %s.  Please enter the correct string ----" % (path, field))
-            r = raw_input()
+            r = input()
             return r.strip()
 
 def build_parsers():
