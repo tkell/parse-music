@@ -7,15 +7,24 @@ import mutagen
 def get_tags(filepath):
     f = mutagen.File(filepath)
 
+    artist = None
     try:
         artist = f.tags['artist'][0]
     except KeyError:
-        artist = None
+        # stupid amazon
+        try: artist = f['TPE2'].text[0]
+        except KeyError:
+            pass
 
+    title = None
     try:
         title = f.tags['title'][0]
     except KeyError:
-        title = None
+        try:
+            # stupid amazon
+            title = f['TIT2'].text[0]
+        except KeyError:
+            pass
 
     return artist, title
 

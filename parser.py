@@ -43,7 +43,7 @@ def build_parsers():
     parsers = []
     # name, album_regex, file_regex
     ## Will we need a 'single regex'?  Will depend on the store, I betcha =\
-    # boomkat is trouble, and should be avoided
+    # so I need to replace boomkat with juno download and amazon
 
     data = [
             # www.bleep.com
@@ -57,6 +57,18 @@ def build_parsers():
               'bandcamp',
               r'NO EXAMPLES YET', 
               r'(?P<artist>.+?) - (?P<title>.+?)\.(?P<extension>.+?)'
+            ),
+            # www.junodownload.com
+            (
+              'juno download',
+              r'NO EXAMPLES YET', 
+              r'(?P<artist>.+?)_-_(?P<title>.+?)\.(?P<extension>.+?)'
+            ),
+            # www.amazon.com
+            (
+              'amazon ',
+              r'(?P<album_title>.+?)',
+              r'\d\d - (?P<title>.+?)\.(?P<extension>.+)'
             ),
         ]
     for name, album_regex_string, file_regex_string in data:
