@@ -13,6 +13,7 @@ class Parser():
     def match_store(self, path, source):
         filename = path.split(os.path.sep)[-1]
         if source == 'album' and self.album_regex.search(filename):
+            print("Match on album for %s" % self.store)
             return True
         elif source == 'file' and self.file_regex.match(filename):
             return True
@@ -55,7 +56,7 @@ def build_parsers():
             # www.bandcamp.com
             (
               'bandcamp',
-              r'NO EXAMPLES YET', 
+              r'(?P<artist>.+?) - (?P<album_title>.+?)',
               r'(?P<artist>.+?) - (?P<title>.+?)\.(?P<extension>.+?)'
             ),
             # www.junodownload.com
@@ -67,7 +68,7 @@ def build_parsers():
             # www.amazon.com
             (
               'amazon ',
-              r'(?P<album_title>.+?)',
+              r'NO EXAMPLES / SUPER GENERIC',
               r'\d\d - (?P<title>.+?)\.(?P<extension>.+)'
             ),
         ]

@@ -66,9 +66,9 @@ def parse_files(folder_path, parser, context, album_info):
             continue
 
         filepath = folder_path + os.path.sep + filename
-        track_number = track_number + 1
         r = parse_file(filepath, parser, 'regular_album', track_number, album_info)
         results.extend(r)
+        track_number = track_number + 1
     return results 
 
 def rename_folder(folder_path, context, album_info):
