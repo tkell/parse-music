@@ -40,8 +40,5 @@ def test_select_work_tag_rename():
 
 def test_select_work_rename_and_move():
     res = select_work('path', None, None, 'artist', 'title', 'new_file_name', 'new_tag_name')
-    print res
     assert(res == [('retag', 'path', 'artist', 'title'), ('rename', 'path', 'new_file_name')])
 
-
-## Should test parse_file here, but ugh.  

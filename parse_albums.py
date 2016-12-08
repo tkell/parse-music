@@ -41,7 +41,6 @@ def parse_folder(path, parsers):
     parser = None
     for p in parsers:
         album_string = path.split(os.path.sep)[-1]
-        print(album_string)
         if p.match_store(album_string, source='album'):
             parser = p
             break
@@ -51,9 +50,9 @@ def parse_folder(path, parsers):
         print("Panic!  No parser found")
     else:
         album_info = {}
-        album_info['artist'] = parser.get_field_from_album(path, 'artist')
-        album_info['album_title'] = parser.get_field_from_album(path, 'album_title')
-        album_info['label'] = parser.get_field_from_album(path, 'label')
+        album_info['artist'] = parser.get_field(path, 'artist', 'album')
+        album_info['album_title'] = parser.get_field(path, 'album_title', 'album')
+        album_info['label'] = parser.get_field(path, 'label', 'album')
 
     return path, parser, context, album_info
 

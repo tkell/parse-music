@@ -20,7 +20,7 @@ def parse_files(filenames, folder_path, parsers):
             # pick parser
             the_parser = None
             for parser in parsers:
-                if parser.match_store(filename, source='file'):
+                if parser.match_store(filename, source='single'):
                     the_parser = parser
                     break
             if the_parser == None:

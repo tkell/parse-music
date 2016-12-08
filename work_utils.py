@@ -12,16 +12,16 @@ def parse_file(filepath, parser, context, track_number=None, album_info=None):
     # should I have one parser per store per context?  Or just two per store albums / singles?
     if context == 'single':
         tag_artist, tag_title = tag_utils.get_tags(filepath) 
-        file_artist = parser.get_field_from_file(filepath, 'artist')
-        file_title = parser.get_field_from_file(filepath, 'title')
-        file_label = parser.get_field_from_file(filepath, 'label')
+        file_artist = parser.get_field(filepath, 'artist', 'single')
+        file_title = parser.get_field(filepath, 'title', 'single')
+        file_label = parser.get_field(filepath, 'label', 'single')
         extension = filepath.split(os.path.sep)[-1].split('.')[-1].lower()
         new_name_from_file = "%s - %s [%s].%s" % (file_artist, file_title, file_label, extension)
         new_name_from_tag = "%s - %s [%s].%s" % (tag_artist, tag_title, file_label, extension)
     elif context == "regular_album":
         tag_artist, tag_title = tag_utils.get_tags(filepath)
         file_artist = album_info['artist']
-        file_title = parser.get_field_from_file(filepath, 'title')
+        file_title = parser.get_field(filepath, 'title', 'album_file')
         file_label = album_info['label']
         extension = filepath.split(os.path.sep)[-1].split('.')[-1].lower()
         new_name_from_file = "%02d - %s.%s" % (track_number, file_title, extension)
@@ -56,9 +56,9 @@ def select_work(filepath, tag_artist, tag_title, file_artist, file_title, new_na
         else:
             task = ('retag', filepath, file_artist, file_title)
             work.append(task)
-
             new_file_name = new_name_from_file
-            folder_path = os.path.join(os.path.split(filepath)[0:-1])[0]
+
+            folder_path = os.path.split(filepath)[0]
             new_file_path = os.path.join(folder_path, new_file_name)
             task = ('rename', filepath, new_file_path)
             work.append(task)
