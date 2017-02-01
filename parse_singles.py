@@ -33,7 +33,7 @@ def parse_files(filenames, folder_path, parsers):
 
     return results
 
-def parse_singles(starting_folder, ending_folder):
+def parse_singles(starting_folder, ending_folder, dry_run):
     parsers = build_parsers() # make the objects that pick the store, do lots of other things
     singles = os.listdir(starting_folder)
     results = parse_files(singles, starting_folder, parsers) # make a list of things to do
@@ -44,5 +44,6 @@ def parse_singles(starting_folder, ending_folder):
         task = parse_file(filepath, parser, context)
         tasks.extend(task)
 
-    success = do_work(tasks) # rename or re-tag the files, as needed.
+    print(dry_run)
+    success = do_work(tasks, dry_run) # rename or re-tag the files, as needed.
     move_items(starting_folder, ending_folder)

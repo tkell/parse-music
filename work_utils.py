@@ -65,14 +65,21 @@ def select_work(filepath, tag_artist, tag_title, file_artist, file_title, new_na
 
     return work
 
-def do_work(tasks):
+def do_work(tasks, dry_run):
+    print(dry_run, len(tasks))
     for task in tasks:
         if task[0] == 'rename':
             task_name, filepath, new_filepath  = task
-            os.rename(filepath, new_filepath)
+            if not dry_run:
+                os.rename(filepath, new_filepath)
+            else:
+                print("Would do ", task)
         if task[0] == 'retag':
             task_name, filepath, artist, title = task 
-            tag_utils.set_tag(filepath, 'artist', artist)
-            tag_utils.set_tag(filepath, 'title', title)
+            if not dry_run:
+                tag_utils.set_tag(filepath, 'artist', artist)
+                tag_utils.set_tag(filepath, 'title', title)
+            else:
+                print("Would do ", task)
 
     return True ## Catch exceptions here, as they show up.

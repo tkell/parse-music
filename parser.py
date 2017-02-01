@@ -67,6 +67,13 @@ def build_parsers():
               r'NO EXAMPLES YET',
               r'(?P<artist>.+?)_-_(?P<title>.+?)\.(?P<extension>.+?)'
             ),
+            # www.beatport.com
+            (
+              'beatport',
+              r'NO EXAMPLES YET',
+              r'NO EXAMPLES YET',
+              r'(\d+?_)(?P<title>.+?)\.(?P<extension>.+)'
+            ),
         ]
     for name, album_regex_string, file_regex_string, single_regex_string in data:
         p = Parser(name, album_regex_string, file_regex_string, single_regex_string)
