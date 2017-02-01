@@ -44,6 +44,6 @@ def parse_singles(starting_folder, ending_folder, dry_run):
         task = parse_file(filepath, parser, context)
         tasks.extend(task)
 
-    print(dry_run)
     success = do_work(tasks, dry_run) # rename or re-tag the files, as needed.
-    move_items(starting_folder, ending_folder)
+    if not dry_run:
+        move_items(starting_folder, ending_folder)
