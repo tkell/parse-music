@@ -80,12 +80,15 @@ def rename_folder(folder_path, context, album_info):
         new_path = os.path.join(path, new_folder_name)
         shutil.move(folder_path, new_path)
 
-def parse_albums(starting_folder, ending_folder):
+def parse_albums(starting_folder, ending_folder, dry_run):
     parsers = build_parsers() # make the objects that pick the store, do lots of other things
     folders = parse_folders(starting_folder) # find all the folders we need 
     for folder in folders:
         folder_path, parser, context, album_info = parse_folder(folder, parsers) # find all the files, and the flags to parse them
         tasks = parse_files(folder_path, parser, context, album_info) # return a list of tuples of files we need to do things to 
-        success = do_work(tasks) # rename or re-tag the files, as needed.
-        rename_folder(folder_path, context, album_info) # very last!
-    move_items(starting_folder, ending_folder)
+        success = do_work(tasks, dry_run) # rename or re-tag the files, as needed.
+        if not dry_run:
+            rename_folder(folder_path, context, album_info) # very last!
+
+    if not dry_run:
+        move_items(starting_folder, ending_folder)

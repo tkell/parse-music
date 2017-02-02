@@ -19,4 +19,4 @@ if __name__ == '__main__':
         print("Launching regular run...")
 
     parse_singles('/Users/thor/Desktop/unparsed/singles', '/Users/thor/Desktop/parsed/singles', args.dry_run)
-    ##  parse_albums('/Users/thor/Desktop/unparsed', '/Users/thor/Desktop/parsed/albums', args.dry_run)
+    parse_albums('/Users/thor/Desktop/unparsed', '/Users/thor/Desktop/parsed/albums', args.dry_run)
