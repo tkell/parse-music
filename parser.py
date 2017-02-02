@@ -35,7 +35,26 @@ class Parser():
 
         filename = path.split(os.path.sep)[-1]
         try:
-            return regex.match(filename).group(field)
+            if self.store == 'beatport':
+                # Deal with replacing things.  Eventually we'll generalize this.
+                res = regex.match(filename).group(field)
+                res = res.replace('_', ' ').strip()
+                if field == 'title':
+                    if 'Original Mix' in res:
+                        res.replace('Original Mix', '')
+                        return res
+                    else:
+                        # Deal with adding remix brackets
+                        print("---- Need to add a remix bracket for %s.  Please enter the correct slice, as an integer ----" % (res))
+                        r = input()
+                        r = int(r)
+
+                        res = res.split(' ')
+                        res[r] = '(' + res[r]
+                        res[-1] = res[-1] + ')'
+                        return ' '.join(res)
+            else:
+                return regex.match(filename).group(field)
         except (AttributeError, IndexError):
             print("---- No data in %s for %s.  Please enter the correct string ----" % (path, field))
             r = input()

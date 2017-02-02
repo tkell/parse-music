@@ -6,15 +6,6 @@ import os
 import tag_utils
 
 def parse_file(filepath, parser, context, track_number=None, album_info=None):
-    # If the parser is beatport, we need to replace undescores with spaces, and fix the Remix lacking brackets.
-    # ugh!  Harder than it looks.  I can't change things here because the regex will break.  
-    # I need to pre-process it _before_ the regex?  that seems a little crazy
-    # or I need to do it in get_field?  Ah, that seems better - and then override get_field for the beatport parser.  
-# ^^ yes, do that one
-    # This should eventually be a full pre-processing step ...
-    if parser[0] == 'beatport':
-
-
     ## This is where I was going to deal with the shit, basically - using context as a switch
     # The context defines where we get the data we need, and what we might rename the file
     # It is the parser's job to get the data - if we have to ask the user for it, the parser can do that
@@ -38,11 +29,7 @@ def parse_file(filepath, parser, context, track_number=None, album_info=None):
     else:
         pass
 
-
     work = select_work(filepath, tag_artist, tag_title, file_artist, file_title, new_name_from_file, new_name_from_tag)
-
-
-
     return work
 
 def select_work(filepath, tag_artist, tag_title, file_artist, file_title, new_name_from_file, new_name_from_tag):
