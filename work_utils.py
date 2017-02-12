@@ -12,6 +12,16 @@ def parse_file(filepath, parser, context, track_number=None, album_info=None):
     # should I have one parser per store per context?  Or just two per store albums / singles?
     if context == 'single':
         tag_artist, tag_title = tag_utils.get_tags(filepath) 
+
+        # Juno is stupid and has all-caps artist names.
+        # We correct that and re-write the tag here, ugh.
+        if parser.store == 'juno download':
+            artist_words = tag_artist.split(' ')
+            artist_words = [word.lower() for word in artist_words]
+            artist_words = [word[0].upper() + word[1:] for word in artist_words]
+            tag_artist = ' '.join(artist_words)
+            tag_utils.set_tag(filepath, 'artist', tag_artist)
+
         file_artist = parser.get_field(filepath, 'artist', 'single')
         file_title = parser.get_field(filepath, 'title', 'single')
         file_label = parser.get_field(filepath, 'label', 'single')

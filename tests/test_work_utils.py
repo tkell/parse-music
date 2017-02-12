@@ -13,7 +13,7 @@ import tag_utils
 def test_do_work_rename():
     rename_tasks = [('rename', 'old_path', 'new_path')]
     os.rename = MagicMock()
-    do_work(rename_tasks)
+    do_work(rename_tasks, False)
     os.rename.assert_called_with('old_path', 'new_path')
 
 def test_do_work_retag():
@@ -21,7 +21,7 @@ def test_do_work_retag():
     retag_tasks = [('retag', 'path', 'the_artist', 'the_title')]
     tag_utils.set_tag = MagicMock()
     try:
-        do_work(retag_tasks)
+        do_work(retag_tasks, False)
     except OSError:
         pass
     c1 = call('path', 'artist', 'the_artist')

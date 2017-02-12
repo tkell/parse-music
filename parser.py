@@ -35,7 +35,11 @@ class Parser():
 
         filename = path.split(os.path.sep)[-1]
         try:
-            if self.store == 'beatport':
+            if self.store == 'juno download':
+                # Deal with replacing things.  Eventually we'll generalize this.
+                res = regex.match(filename).group(field)
+                res = res.replace('_', ' ').strip()
+            elif self.store == 'beatport':
                 # Deal with replacing things.  Eventually we'll generalize this.
                 res = regex.match(filename).group(field)
                 res = res.replace('_', ' ').strip()
@@ -84,7 +88,7 @@ def build_parsers():
               'juno download',
               r'NO EXAMPLES YET',
               r'NO EXAMPLES YET',
-              r'(?P<artist>.+?)_-_(?P<title>.+?)\.(?P<extension>.+?)'
+              r'\d-(?P<artist>.+?)_-_(?P<title>.+?)\.(?P<extension>.+?)'
             ),
             # www.beatport.com
             (
