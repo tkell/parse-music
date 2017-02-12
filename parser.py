@@ -23,6 +23,7 @@ class Parser():
             return False
 
     def get_field(self, path, field, regex_type):
+        ## This needs to deal with tag data too, somehow.  Hrm.
         # Give this the file path
         if regex_type == 'album':
             regex = self.album_regex
@@ -68,6 +69,7 @@ def build_parsers():
     parsers = []
 
     # name, album_regex, album_file_regex, single_regex
+    # Order matters here!
     data = [
             # www.bleep.com
             (
@@ -75,6 +77,13 @@ def build_parsers():
              r'(?P<artist>.+?) - (?P<album_title>.+?) - (?P<extension>.+)',
              r'(?P<album_title>.+?)-\d\d\d-(?P<artist>.+?)-(?P<title>.+?)\.(?P<extension>.+)',
              r'(?P<album_title>.+?)-\d\d\d-(?P<artist>.+?)-(?P<title>.+?)\.(?P<extension>.+)'
+            ),
+            # www.amazon.com
+            (
+              'amazon',
+              r'NO EXAMPLES YET',
+              r'NO EXAMPLES YET',
+              r'AMAZON (\d+?) - (?P<title>.+?)\.(?P<extension>.+)'
             ),
             # www.bandcamp.com
             (
