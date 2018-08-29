@@ -71,19 +71,19 @@ def build_parsers():
     # name, album_regex, album_file_regex, single_regex
     # Order matters here!
     data = [
+            # www.amazon.com, needs to be first because of the AMAZON prepend
+            (
+              'amazon',
+              r'AMAZON (?P<artist>.+?) - (?P<album_title>.+)',
+              r'\d\d - (?P<title>.+?)\.(?P<extension>.+)',
+              r'AMAZON (\d+?) - (?P<title>.+?)\.(?P<extension>.+)'
+            ),
             # www.bleep.com
             (
              'bleep', 
              r'(?P<artist>.+?) - (?P<album_title>.+?) - (?P<extension>.+)',
              r'(?P<album_title>.+?)-\d\d\d-(?P<artist>.+?)-(?P<title>.+?)\.(?P<extension>.+)',
              r'(?P<album_title>.+?)-\d\d\d-(?P<artist>.+?)-(?P<title>.+?)\.(?P<extension>.+)'
-            ),
-            # www.amazon.com
-            (
-              'amazon',
-              r'NO EXAMPLES YET',
-              r'NO EXAMPLES YET',
-              r'AMAZON (\d+?) - (?P<title>.+?)\.(?P<extension>.+)'
             ),
             # www.bandcamp.com
             (
