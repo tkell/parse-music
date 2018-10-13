@@ -9,7 +9,7 @@ def run_amazon(path):
     for amazon_dir in amazon_dirs:
         potential_files = os.walk(path + os.path.sep + amazon_dir)
         for path_tuple in potential_files:
-            filepath  = path_tuple[0]
+            filepath = path_tuple[0]
             if path_tuple[-1]:
                 filename = path_tuple[-1][0]
                 if '.mp3' in filename or '.flac' in filename:
