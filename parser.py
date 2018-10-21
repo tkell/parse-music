@@ -41,12 +41,11 @@ class Parser():
                 res = regex.match(filename).group(field)
                 res = res.replace('_', ' ').strip()
             elif self.store == 'beatport':
-                # Deal with replacing things.  Eventually we'll generalize this.
                 res = regex.match(filename).group(field)
                 res = res.replace('_', ' ').strip()
                 if field == 'title':
                     if 'Original Mix' in res:
-                        res.replace('Original Mix', '')
+                        res = res.replace('Original Mix', '').strip()
                         return res
                     else:
                         # Deal with adding remix brackets
@@ -104,7 +103,7 @@ def build_parsers():
               'beatport',
               r'NO EXAMPLES YET',
               r'NO EXAMPLES YET',
-              r'(\d+?_)(?P<title>.+?)\.(?P<extension>.+)'
+              r'(\d\d\d\d\d\d\d_)(?P<title>.+?)\.(?P<extension>.+)'
             ),
         ]
     for name, album_regex_string, file_regex_string, single_regex_string in data:

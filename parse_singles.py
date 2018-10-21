@@ -30,6 +30,8 @@ def parse_files(filenames, folder_path, parsers):
 
             filepath = os.path.join(folder_path, filename)
             results.append((filepath, the_parser))
+        else:
+            print("No mp3, or flac singles found – don't forget to convert your wave files!")
 
     return results
 
