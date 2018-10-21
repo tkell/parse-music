@@ -75,7 +75,7 @@ def build_parsers():
               'amazon',
               r'AMAZON (?P<artist>.+?) - (?P<album_title>.+)',
               r'\d\d - (?P<title>.+?)\.(?P<extension>.+)',
-              r'AMAZON (\d+?) - (?P<title>.+?)\.(?P<extension>.+)'
+              r'AMAZON (?P<artist>.+?) - (\d+?) - (?P<title>.+?)\.(?P<extension>.+)'
             ),
             # www.bleep.com
             (
