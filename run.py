@@ -10,6 +10,8 @@ from parse_albums import parse_albums
 
 
 if __name__ == '__main__':
+    print("THERE IS A MAJOR BUG WITH ALBUM TRACK ORDER!  STOP WHAT YOU ARE DOING AND FIX IT")
+
     parser = argparse.ArgumentParser()
     parser.add_argument("--dry_run", help="Dry run", action="store_true")
     args = parser.parse_args()
