@@ -103,7 +103,7 @@ def build_parsers():
               'beatport',
               r'NO EXAMPLES YET',
               r'NO EXAMPLES YET',
-              r'(\d\d\d\d\d\d\d_)(?P<title>.+?)\.(?P<extension>.+)'
+              r'(\d.+?_)(?P<title>.+?)\.(?P<extension>.+)'
             ),
         ]
     for name, album_regex_string, file_regex_string, single_regex_string in data:
