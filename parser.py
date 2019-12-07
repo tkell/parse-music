@@ -4,7 +4,8 @@
 import os
 import re
 
-class Parser():
+
+class Parser:
     def __init__(self, store, album_regex, album_file_regex, single_regex):
         self.store = store
         self.album_regex = re.compile(album_regex)
@@ -49,7 +50,10 @@ class Parser():
                         return res
                     else:
                         # Deal with adding remix brackets
-                        print("---- Need to add a remix bracket for %s.  Please enter the correct slice, as an integer ----" % (res))
+                        print(
+                            "---- Need to add a remix bracket for %s.  Please enter the correct slice, as an integer ----"
+                            % (res)
+                        )
                         r = input()
                         r = int(r)
 
@@ -60,9 +64,13 @@ class Parser():
             else:
                 return regex.match(filename).group(field)
         except (AttributeError, IndexError):
-            print("---- No data in %s for %s.  Please enter the correct string ----" % (path, field))
+            print(
+                "---- No data in %s for %s.  Please enter the correct string ----"
+                % (path, field)
+            )
             r = input()
             return r.strip()
+
 
 def build_parsers():
     parsers = []
@@ -70,45 +78,44 @@ def build_parsers():
     # name, album_regex, album_file_regex, single_regex
     # Order matters here!
     data = [
-            # www.amazon.com, needs to be first because of the AMAZON prepend
-            (
-              'amazon',
-              r'AMAZON (?P<artist>.+?) - (?P<album_title>.+)',
-              r'\d\d - (?P<title>.+?)\.(?P<extension>.+)',
-              r'AMAZON (?P<artist>.+?) - (\d+?) - (?P<title>.+?)\.(?P<extension>.+)'
-            ),
-            # www.bleep.com
-            (
-             'bleep', 
-             r'(?P<artist>.+?) - (?P<album_title>.+?) - (?P<extension>.+)',
-             r'(?P<album_title>.+?)-\d\d\d-(?P<artist>.+?)-(?P<title>.+?)\.(?P<extension>.+)',
-             r'(?P<album_title>.+?)-\d\d\d-(?P<artist>.+?)-(?P<title>.+?)\.(?P<extension>.+)'
-            ),
-            # www.bandcamp.com
-            (
-              'bandcamp',
-              r'(?P<artist>.+?) - (?P<album_title>.+)',
-              r'(?P<artist>.+?) - (?P<album_title>.+?) - \d\d (?P<title>.+?)\.(?P<extension>.+)',
-              r'(?P<artist>.+?) - (?P<title>.+?)\.(?P<extension>.+)'
-            ),
-            # www.junodownload.com
-            (
-              'juno download',
-              r'NO EXAMPLES YET',
-              r'NO EXAMPLES YET',
-              r'\d-(?P<artist>.+?)_-_(?P<title>.+?)\.(?P<extension>.+?)'
-            ),
-            # www.beatport.com
-            (
-              'beatport',
-              r'NO EXAMPLES YET',
-              r'NO EXAMPLES YET',
-              r'(\d.+?_)(?P<title>.+?)\.(?P<extension>.+)'
-            ),
-        ]
+        # www.amazon.com, needs to be first because of the AMAZON prepend
+        (
+            'amazon',
+            r'AMAZON (?P<artist>.+?) - (?P<album_title>.+)',
+            r'\d\d - (?P<title>.+?)\.(?P<extension>.+)',
+            r'AMAZON (?P<artist>.+?) - (\d+?) - (?P<title>.+?)\.(?P<extension>.+)',
+        ),
+        # www.bleep.com
+        (
+            'bleep',
+            r'(?P<artist>.+?) - (?P<album_title>.+?) - (?P<extension>.+)',
+            r'(?P<album_title>.+?)-\d\d\d-(?P<artist>.+?)-(?P<title>.+?)\.(?P<extension>.+)',
+            r'(?P<album_title>.+?)-\d\d\d-(?P<artist>.+?)-(?P<title>.+?)\.(?P<extension>.+)',
+        ),
+        # www.bandcamp.com
+        (
+            'bandcamp',
+            r'(?P<artist>.+?) - (?P<album_title>.+)',
+            r'(?P<artist>.+?) - (?P<album_title>.+?) - \d\d (?P<title>.+?)\.(?P<extension>.+)',
+            r'(?P<artist>.+?) - (?P<title>.+?)\.(?P<extension>.+)',
+        ),
+        # www.junodownload.com
+        (
+            'juno download',
+            r'NO EXAMPLES YET',
+            r'NO EXAMPLES YET',
+            r'\d-(?P<artist>.+?)_-_(?P<title>.+?)\.(?P<extension>.+?)',
+        ),
+        # www.beatport.com
+        (
+            'beatport',
+            r'NO EXAMPLES YET',
+            r'NO EXAMPLES YET',
+            r'(\d.+?_)(?P<title>.+?)\.(?P<extension>.+)',
+        ),
+    ]
     for name, album_regex_string, file_regex_string, single_regex_string in data:
         p = Parser(name, album_regex_string, file_regex_string, single_regex_string)
         parsers.append(p)
 
     return parsers
-
