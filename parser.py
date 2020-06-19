@@ -82,21 +82,21 @@ def build_parsers():
         (
             'amazon',
             r'AMAZON (?P<artist>.+?) - (?P<album_title>.+)',
-            r'\d\d - (?P<title>.+?)\.(?P<extension>.+)',
+            r'(?P<track_number>\d\d) - (?P<title>.+?)\.(?P<extension>.+)',
             r'AMAZON (?P<artist>.+?) - (\d+?) - (?P<title>.+?)\.(?P<extension>.+)',
         ),
         # www.bleep.com
         (
             'bleep',
             r'(?P<artist>.+?) - (?P<album_title>.+?) - (?P<extension>.+)',
-            r'(?P<album_title>.+?)-\d\d\d-(?P<artist>.+?)-(?P<title>.+?)\.(?P<extension>.+)',
+            r'(?P<album_title>.+?)-(?P<track_number>\d\d\d)-(?P<artist>.+?)-(?P<title>.+?)\.(?P<extension>.+)',
             r'(?P<album_title>.+?)-\d\d\d-(?P<artist>.+?)-(?P<title>.+?)\.(?P<extension>.+)',
         ),
         # www.bandcamp.com
         (
             'bandcamp',
             r'(?P<artist>.+?) - (?P<album_title>.+)',
-            r'(?P<artist>.+?) - (?P<album_title>.+?) - \d\d (?P<title>.+?)\.(?P<extension>.+)',
+            r'(?P<artist>.+?) - (?P<album_title>.+?) - (?P<track_number>\d\d) (?P<title>.+?)\.(?P<extension>.+)',
             r'(?P<artist>.+?) - (?P<title>.+?)\.(?P<extension>.+)',
         ),
         # www.junodownload.com

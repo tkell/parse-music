@@ -33,3 +33,11 @@ def move_items(starting_path, ending_path):
             shutil.move(filepath, ending_filepath)
         elif '.mp3' in filename.lower() or '.flac' in filename.lower():
             shutil.move(filepath, ending_filepath)
+
+def sort_by_track_number(filenames, path, parser)
+    sorted_filenames = sorted(
+        filenames,
+        key=lambda filename: parser.get_field(
+            os.path.join(path, filename), 'track_number', 'album_file'
+        ),
+    )
