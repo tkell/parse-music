@@ -48,18 +48,15 @@ def parse_folder(path, parsers):
 def parse_files(folder_path, parser, context, album_info):
     results = []
 
-    # We now sort by track number - and need to add that to all parsers!
     filenames = os.listdir(folder_path)
     sorted_filenames = sort_by_track_number(filenames, folder_path, parser)
-    track_number = 1
     for index, filename in enumerate(sorted_filenames):
         if 'mp3' not in filename.lower() and 'flac' not in filename.lower():
             continue
 
         filepath = os.path.join(folder_path, filename)
-        r = parse_file(filepath, parser, 'regular_album', track_number, album_info)
+        r = parse_file(filepath, parser, 'regular_album', album_info)
         results.extend(r)
-        track_number = track_number + 1
     return results
 
 
