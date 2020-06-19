@@ -5,13 +5,14 @@
 import os
 import tag_utils
 
-def parse_file(filepath, parser, context, track_number=None, album_info=None):
+
+def parse_file(filepath, parser, context, album_info=None):
     ## This is where I was going to deal with the shit, basically - using context as a switch
     # The context defines where we get the data we need, and what we might rename the file
     # It is the parser's job to get the data - if we have to ask the user for it, the parser can do that
     # should I have one parser per store per context?  Or just two per store albums / singles?
     if context == 'single':
-        tag_artist, tag_title = tag_utils.get_tags(filepath) 
+        tag_artist, tag_title = tag_utils.get_tags(filepath)
 
         # Juno is stupid and has all-caps artist names.
         # We correct that and re-write the tag here, ugh.
@@ -26,23 +27,53 @@ def parse_file(filepath, parser, context, track_number=None, album_info=None):
         file_title = parser.get_field(filepath, 'title', 'single')
         file_label = parser.get_field(filepath, 'label', 'single')
         extension = filepath.split(os.path.sep)[-1].split('.')[-1].lower()
-        new_name_from_file = "%s - %s [%s].%s" % (file_artist, file_title, file_label, extension)
-        new_name_from_tag = "%s - %s [%s].%s" % (tag_artist, tag_title, file_label, extension)
+        new_name_from_file = "%s - %s [%s].%s" % (
+            file_artist,
+            file_title,
+            file_label,
+            extension,
+        )
+        new_name_from_tag = "%s - %s [%s].%s" % (
+            tag_artist,
+            tag_title,
+            file_label,
+            extension,
+        )
     elif context == "regular_album":
         tag_artist, tag_title = tag_utils.get_tags(filepath)
         file_artist = album_info['artist']
         file_title = parser.get_field(filepath, 'title', 'album_file')
+        file_track_number = int(
+            parser.get_field(filepath, 'track_number', 'album_file')
+        )
         file_label = album_info['label']
         extension = filepath.split(os.path.sep)[-1].split('.')[-1].lower()
-        new_name_from_file = "%02d - %s.%s" % (track_number, file_title, extension)
-        new_name_from_tag = "%02d - %s.%s" % (track_number, tag_title, extension)
+        new_name_from_file = "%02d - %s.%s" % (file_track_number, file_title, extension)
+        new_name_from_tag = "%02d - %s.%s" % (file_track_number, tag_title, extension)
     else:
         pass
 
-    work = select_work(filepath, tag_artist, tag_title, file_artist, file_title, new_name_from_file, new_name_from_tag)
+    work = select_work(
+        filepath,
+        tag_artist,
+        tag_title,
+        file_artist,
+        file_title,
+        new_name_from_file,
+        new_name_from_tag,
+    )
     return work
 
-def select_work(filepath, tag_artist, tag_title, file_artist, file_title, new_name_from_file, new_name_from_tag):
+
+def select_work(
+    filepath,
+    tag_artist,
+    tag_title,
+    file_artist,
+    file_title,
+    new_name_from_file,
+    new_name_from_tag,
+):
     work = []
 
     # if they are the same, we just need to rename the file
@@ -74,20 +105,21 @@ def select_work(filepath, tag_artist, tag_title, file_artist, file_title, new_na
 
     return work
 
+
 def do_work(tasks, dry_run):
     for task in tasks:
         if task[0] == 'rename':
-            task_name, filepath, new_filepath  = task
+            task_name, filepath, new_filepath = task
             if not dry_run:
                 os.rename(filepath, new_filepath)
             else:
                 print("Would do ", task)
         if task[0] == 'retag':
-            task_name, filepath, artist, title = task 
+            task_name, filepath, artist, title = task
             if not dry_run:
                 tag_utils.set_tag(filepath, 'artist', artist)
                 tag_utils.set_tag(filepath, 'title', title)
             else:
                 print("Would do ", task)
 
-    return True ## Catch exceptions here, as they show up.
+    return True  ## Catch exceptions here, as they show up.
