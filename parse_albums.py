@@ -55,7 +55,7 @@ def parse_files(folder_path, parser, context, album_info):
             continue
 
         filepath = os.path.join(folder_path, filename)
-        r = parse_file(filepath, parser, 'regular_album', album_info)
+        r = parse_file(filepath, parser, context, album_info)
         results.extend(r)
     return results
 

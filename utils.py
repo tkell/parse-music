@@ -23,9 +23,11 @@ def check_filetype(path):
 
 
 def get_context(path):
-    # This will eventually return one string for each possible album type
-    # but for now:
-    return 'regular_album'
+    # These contexts are used to decide how we pick data to write to
+    if check_various_artists(path):
+        return 'various_artists_album'
+    else:
+        return 'regular_album'
 
 
 def move_items(starting_path, ending_path):
