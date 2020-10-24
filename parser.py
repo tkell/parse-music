@@ -85,6 +85,13 @@ def build_parsers():
             r'(?P<track_number>\d\d) - (?P<title>.+?)\.(?P<extension>.+)',
             r'AMAZON (?P<artist>.+?) - (\d+?) - (?P<title>.+?)\.(?P<extension>.+)',
         ),
+        # New amazon singles format!
+        (
+            'amazon - new singles',
+            r'NO EXAMPLES YET',
+            r'NO EXAMPLES YET',
+            r'(\d\d?) - (?P<title>.+?)\.(?P<extension>.+)',
+        ),
         # www.bleep.com
         (
             'bleep',
