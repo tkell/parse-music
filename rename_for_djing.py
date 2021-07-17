@@ -1,3 +1,4 @@
+import argparse
 import os
 import re
 from tag_utils import get_tags
@@ -11,17 +12,23 @@ Mostly used when taking Serato crates on the go
 as flat folders!
 """
 
-if __name__ == '__main__':
-    path = '/Users/thor/Desktop/not-a-real-folder-change-me!!'
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Rename Files For Djing")
+    parser.add_argument("--folder", type=str, help="Path to folder to rename files in")
+    args = parser.parse_args()
+    path = args.folder
+    if path[-1] != "/":
+        path = path + "/"
+
     for filename in os.listdir(path):
-        if re.match(r'\d+ - .*', filename):
+        if re.match(r"\d+ - .*", filename):
             _, file_extension = os.path.splitext(filename)
             filepath = path + filename
             artist, title = get_tags(filepath)
             if not artist or not title:
-                print(filename, 'PANIC!')
+                print(filename, "PANIC!")
                 continue
-            new_filename = artist + ' - ' + title
+            new_filename = artist + " - " + title
             new_filepath = path + new_filename + file_extension
             print(filepath, new_filepath)
             os.rename(filepath, new_filepath)
