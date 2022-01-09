@@ -13,14 +13,15 @@ from tag_utils import get_tags
 
 from parser import build_parsers
 
+
 def parse_files(filenames, folder_path, parsers):
     results = []
     for filename in filenames:
-        if '.mp3' in filename.lower() or '.flac' in filename.lower():
+        if ".mp3" in filename.lower() or ".flac" in filename.lower():
             # pick parser
             the_parser = None
             for parser in parsers:
-                if parser.match_store(filename, source='single'):
+                if parser.match_store(filename, source="single"):
                     the_parser = parser
                     break
             if the_parser == None:
@@ -31,21 +32,28 @@ def parse_files(filenames, folder_path, parsers):
             filepath = os.path.join(folder_path, filename)
             results.append((filepath, the_parser))
         else:
-            print("No mp3, or flac singles found – don't forget to convert your wave files!")
+            print(
+                "No mp3, or flac singles found – don't forget to convert your wave files!"
+            )
 
     return results
 
+
 def parse_singles(starting_folder, ending_folder, dry_run):
-    parsers = build_parsers() # make the objects that pick the store, do lots of other things
+    parsers = (
+        build_parsers()
+    )  # make the objects that pick the store, do lots of other things
     singles = os.listdir(starting_folder)
-    results = parse_files(singles, starting_folder, parsers) # make a list of things to do
-    
+    results = parse_files(
+        singles, starting_folder, parsers
+    )  # make a list of things to do
+
     tasks = []
-    context = 'single'
+    context = "single"
     for filepath, parser in results:
         task = parse_file(filepath, parser, context)
         tasks.extend(task)
 
-    success = do_work(tasks, dry_run) # rename or re-tag the files, as needed.
+    success = do_work(tasks, dry_run)  # rename or re-tag the files, as needed.
     if not dry_run:
         move_items(starting_folder, ending_folder)

@@ -9,7 +9,7 @@ from parse_singles import parse_singles
 from parse_albums import parse_albums
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--dry_run", help="Dry run", action="store_true")
     args = parser.parse_args()
@@ -19,12 +19,12 @@ if __name__ == '__main__':
         print("Launching regular run...")
 
     parse_singles(
-        '/Users/thor/Desktop/unparsed/singles',
-        '/Users/thor/Desktop/parsed/singles',
+        "/Users/thor/Desktop/unparsed/singles",
+        "/Users/thor/Desktop/parsed/singles",
         args.dry_run,
     )
     parse_albums(
-        '/Users/thor/Desktop/unparsed',
-        '/Users/thor/Desktop/parsed/albums',
+        "/Users/thor/Desktop/unparsed",
+        "/Users/thor/Desktop/parsed/albums",
         args.dry_run,
     )

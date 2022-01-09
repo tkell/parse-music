@@ -18,7 +18,7 @@ def parse_folders(path):
     results = []
     for filename in files:
         filepath = path + os.path.sep + filename
-        if os.path.isdir(filepath) and filename != 'singles' and filename[0] != '.':
+        if os.path.isdir(filepath) and filename != "singles" and filename[0] != ".":
             results.append(filepath)
     return results
 
@@ -29,7 +29,7 @@ def parse_folder(path, parsers):
     parser = None
     for p in parsers:
         album_string = path.split(os.path.sep)[-1]
-        if p.match_store(album_string, source='album'):
+        if p.match_store(album_string, source="album"):
             parser = p
             break
     if parser == None:
@@ -38,9 +38,9 @@ def parse_folder(path, parsers):
         print("Panic!  No parser found")
     else:
         album_info = {}
-        album_info['artist'] = parser.get_field(path, 'artist', 'album')
-        album_info['album_title'] = parser.get_field(path, 'album_title', 'album')
-        album_info['label'] = parser.get_field(path, 'label', 'album')
+        album_info["artist"] = parser.get_field(path, "artist", "album")
+        album_info["album_title"] = parser.get_field(path, "album_title", "album")
+        album_info["label"] = parser.get_field(path, "label", "album")
 
     return path, parser, context, album_info
 
@@ -51,7 +51,7 @@ def parse_files(folder_path, parser, context, album_info):
     filenames = os.listdir(folder_path)
     sorted_filenames = sort_by_track_number(filenames, folder_path, parser)
     for index, filename in enumerate(sorted_filenames):
-        if 'mp3' not in filename.lower() and 'flac' not in filename.lower():
+        if "mp3" not in filename.lower() and "flac" not in filename.lower():
             continue
 
         filepath = os.path.join(folder_path, filename)
@@ -62,9 +62,9 @@ def parse_files(folder_path, parser, context, album_info):
 
 def rename_folder(folder_path, context, album_info):
     if context == "regular_album":
-        artist = album_info['artist']
-        title = album_info['album_title']
-        label = album_info['label']
+        artist = album_info["artist"]
+        title = album_info["album_title"]
+        label = album_info["label"]
         new_folder_name = "%s - %s [%s]" % (artist, title, label)
         path = os.path.dirname(folder_path)
         new_path = os.path.join(path, new_folder_name)
