@@ -29,6 +29,9 @@ def parse_folder(path, parsers):
     parser = None
     for p in parsers:
         album_string = path.split(os.path.sep)[-1]
+        if p.match_store(album_string, source="various_artists"):
+            parser = p
+            break
         if p.match_store(album_string, source="album"):
             parser = p
             break
@@ -72,17 +75,11 @@ def rename_folder(folder_path, context, album_info):
 
 
 def parse_albums(starting_folder, ending_folder, dry_run):
-    parsers = (
-        build_parsers()
-    )  # make the objects that pick the store, do lots of other things
-    folders = parse_folders(starting_folder)  # find all the folders we need
+    parsers = build_parsers()
+    folders = parse_folders(starting_folder)
     for folder in folders:
-        folder_path, parser, context, album_info = parse_folder(
-            folder, parsers
-        )  # find all the files, and the flags to parse them
-        tasks = parse_files(
-            folder_path, parser, context, album_info
-        )  # return a list of tuples of files we need to do things to
+        folder_path, parser, context, album_info = parse_folder(folder, parsers)
+        tasks = parse_files(folder_path, parser, context, album_info)
         success = do_work(tasks, dry_run)  # rename or re-tag the files, as needed.
         if not dry_run:
             rename_folder(folder_path, context, album_info)  # very last!

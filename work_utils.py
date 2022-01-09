@@ -52,26 +52,22 @@ def parse_file(filepath, parser, context, album_info=None):
         new_name_from_tag = "%02d - %s.%s" % (file_track_number, tag_title, extension)
     elif context == "various_artists_album":
         tag_artist, tag_title = tag_utils.get_tags(filepath)
-        file_artist = parser.get_field(filepath, "artist", "album_file")
-        file_title = parser.get_field(filepath, "title", "album_file")
+        file_artist = parser.get_field(filepath, "artist", "various_artists_file")
+        file_title = parser.get_field(filepath, "title", "various_artists_file")
         file_track_number = int(
-            parser.get_field(filepath, "track_number", "album_file")
+            parser.get_field(filepath, "track_number", "various_artists_file")
         )
         file_label = album_info["label"]
         extension = filepath.split(os.path.sep)[-1].split(".")[-1].lower()
+        # We only use the name from the file,
+        # as there are lots of strange metadata things in Various Artists albums
         new_name_from_file = "%02d - %s - %s.%s" % (
             file_track_number,
             file_artist,
             file_title,
             extension,
         )
-        new_name_from_tag = "%02d - %s - %s.%s" % (
-            file_track_number,
-            tag_title,
-            tag_title,
-            extension,
-        )
-        print("got a various artists album!")
+        new_name_from_tag = new_name_from_file
     else:
         pass
 

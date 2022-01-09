@@ -6,14 +6,32 @@ import re
 
 
 class Parser:
-    def __init__(self, store, album_regex, album_file_regex, single_regex):
+    def __init__(
+        self,
+        store,
+        album_regex,
+        album_file_regex,
+        single_regex,
+        various_artists_regex,
+        various_artists_file_regex,
+    ):
         self.store = store
         self.album_regex = re.compile(album_regex)
         self.album_file_regex = re.compile(album_file_regex)
         self.single_regex = re.compile(single_regex)
+        self.various_artists_regex = re.compile(various_artists_regex)
+        self.various_artists_file_regex = re.compile(various_artists_file_regex)
 
     def match_store(self, path, source):
         filename = path.split(os.path.sep)[-1]
+        # check for Various Artists - not enabled for all store yet
+        if self.store == "bandcamp":
+            if source == "various_artists" and self.various_artists_regex.search(
+                filename
+            ):
+                print("Match on various artists album for %s" % self.store)
+                return True
+
         if source == "album" and self.album_regex.search(filename):
             print("Match on album for %s" % self.store)
             return True
@@ -30,10 +48,16 @@ class Parser:
             regex = self.album_regex
         elif regex_type == "album_file":
             regex = self.album_file_regex
+        elif regex_type == "various_artists":
+            regex = self.various_artists_regex
+        elif regex_type == "various_artists_file":
+            regex = self.various_artists_file_regex
         elif regex_type == "single":
             regex = self.single_regex
         else:
-            raise TypeError("regex_type must be one of album, album_file, or single!")
+            raise TypeError(
+                "regex_type must be one of album, album_file, various_artists, various_artists_file, or single!"
+            )
 
         filename = path.split(os.path.sep)[-1]
         try:
@@ -75,7 +99,7 @@ class Parser:
 def build_parsers():
     parsers = []
 
-    # name, album_regex, album_file_regex, single_regex
+    # name, album_regex, album_file_regex, single_regex, various_artists_regex, various_artists_file_regex
     # Order matters here!
     data = [
         # www.amazon.com, needs to be first because of the AMAZON prepend
@@ -84,6 +108,8 @@ def build_parsers():
             r"AMAZON (?P<artist>.+?) - (?P<album_title>.+)",
             r"(?P<track_number>\d\d) - (?P<title>.+?)\.(?P<extension>.+)",
             r"AMAZON (?P<artist>.+?) - (\d+?) - (?P<title>.+?)\.(?P<extension>.+)",
+            "NO EXAMPLES YET",
+            "NO EXAMPLES YET",
         ),
         # New amazon singles format!
         (
@@ -91,13 +117,8 @@ def build_parsers():
             r"NO EXAMPLES YET",
             r"NO EXAMPLES YET",
             r"(\d\d?) - (?P<title>.+?)\.(?P<extension>.+)",
-        ),
-        # www.bleep.com
-        (
-            "bleep",
-            r"(?P<artist>.+?) - (?P<album_title>.+?) - (?P<extension>.+)",
-            r"(?P<album_title>.+?)-(?P<track_number>\d\d\d)-(?P<artist>.+?)-(?P<title>.+?)\.(?P<extension>.+)",
-            r"(?P<album_title>.+?)-\d\d\d-(?P<artist>.+?)-(?P<title>.+?)\.(?P<extension>.+)",
+            "NO EXAMPLES YET",
+            "NO EXAMPLES YET",
         ),
         # www.bandcamp.com
         (
@@ -105,13 +126,19 @@ def build_parsers():
             r"(?P<artist>.+?) - (?P<album_title>.+)",
             r"(?P<artist>.+?) - (?P<album_title>.+?) - (?P<track_number>\d\d) (?P<title>.+?)\.(?P<extension>.+)",
             r"(?P<artist>.+?) - (?P<title>.+?)\.(?P<extension>.+)",
+            ## Various Artists - Dig This Way Records - The Best Of Jicco Funk - Vol.1
+            r"Various Artists - (?P<album_artist>.+?) - (?P<album_title>.+)",
+            ## Dig This Way Records - The Best Of Jicco Funk - Vol.1 - 01 Jah Children - Givin Love To Your Fellow Men
+            r"(?P<album_artist>.+?) - (?P<album_title>.+?) - (?P<track_number>\d\d) (?P<artist>.+?) - (?P<title>.+?)\.(?P<extension>.+)",
         ),
-        # www.junodownload.com
+        # www.bleep.com
         (
-            "juno download",
-            r"NO EXAMPLES YET",
-            r"NO EXAMPLES YET",
-            r"\d-(?P<artist>.+?)_-_(?P<title>.+?)\.(?P<extension>.+?)",
+            "bleep",
+            r"(?P<artist>.+?) - (?P<album_title>.+?) - (?P<extension>.+)",
+            r"(?P<album_title>.+?)-(?P<track_number>\d\d\d)-(?P<artist>.+?)-(?P<title>.+?)\.(?P<extension>.+)",
+            r"(?P<album_title>.+?)-\d\d\d-(?P<artist>.+?)-(?P<title>.+?)\.(?P<extension>.+)",
+            "NO EXAMPLES YET",
+            "NO EXAMPLES YET",
         ),
         # www.beatport.com
         (
@@ -119,10 +146,35 @@ def build_parsers():
             r"NO EXAMPLES YET",
             r"NO EXAMPLES YET",
             r"(\d.+?_)(?P<title>.+?)\.(?P<extension>.+)",
+            "NO EXAMPLES YET",
+            "NO EXAMPLES YET",
+        ),
+        # www.junodownload.com
+        (
+            "juno download",
+            r"NO EXAMPLES YET",
+            r"NO EXAMPLES YET",
+            r"\d-(?P<artist>.+?)_-_(?P<title>.+?)\.(?P<extension>.+?)",
+            "NO EXAMPLES YET",
+            "NO EXAMPLES YET",
         ),
     ]
-    for name, album_regex_string, file_regex_string, single_regex_string in data:
-        p = Parser(name, album_regex_string, file_regex_string, single_regex_string)
+    for (
+        name,
+        album_regex,
+        file_regex,
+        single_regex,
+        various_artists_regex,
+        various_artists_file_regex,
+    ) in data:
+        p = Parser(
+            name,
+            album_regex,
+            file_regex,
+            single_regex,
+            various_artists_regex,
+            various_artists_file_regex,
+        )
         parsers.append(p)
 
     return parsers
