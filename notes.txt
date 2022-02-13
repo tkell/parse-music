@@ -1,0 +1,28 @@
+RELEASES
+
+I think this is it:
+- Carly Rae Jepsen - Dedicated [School Boy]
+  - 01 - Julien.flac
+  ...
+  - 05 - Everything He Needs.marker
+  ...
+  - cover.jpg
+  - discogs_metadata.json
+
+How do I group these?
+- Collect every file in /Singles
+- Group by artist and label, give each a number
+- group, say, 2, 4, 8
+  - maybe wire in a discogs search?
+  - enter a an album name
+  - move to /Releases/<artist> - <album> - [<label>]
+  - hey hey, call Discogs, get the meta, fill in the markers here!
+    - (this is hard, blregh)
+  - move files with proper names (01 - track, 02 - track (remix), etc)
+- repeat until we're out of file for that artist!
+    
+Oh, ugh, first I need to update the current parser to do this, hiss
+- hmm, or we could just run the above grouper on `parsed`?
+- That feels a bit dodgy, but it is nice, I think
+- it means if we have 3 very disparate tracks from one release, we can just put 'em together
+
