@@ -126,10 +126,8 @@ def build_parsers():
             r"(?P<artist>.+?) - (?P<album_title>.+)",
             r"(?P<artist>.+?) - (?P<album_title>.+?) - (?P<track_number>\d\d) (?P<title>.+?)\.(?P<extension>.+)",
             r"(?P<artist>.+?) - (?P<title>.+?)\.(?P<extension>.+)",
-            ## Various Artists - Dig This Way Records - The Best Of Jicco Funk - Vol.1
-            r"Various Artists - (?P<album_artist>.+?) - (?P<album_title>.+)",
-            ## Dig This Way Records - The Best Of Jicco Funk - Vol.1 - 01 Jah Children - Givin Love To Your Fellow Men
-            r"(?P<album_artist>.+?) - (?P<album_title>.+?) - (?P<track_number>\d\d) (?P<artist>.+?) - (?P<title>.+?)\.(?P<extension>.+)",
+            r"Various Artists - (?P<album_title>.+)",
+            r"(?P<artist>.+?) - (?P<album_title>.+?) - (?P<track_number>\d\d) (?P<title>.+?)\.(?P<extension>.+)",
         ),
         # www.bleep.com
         (
