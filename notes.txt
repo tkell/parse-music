@@ -1,4 +1,15 @@
+## Tech debt game
+- I shoud upgrade mutagen to latest, and then make sure it works with FLAC and mp3
+- tag_utils might need a rewrite to case on FLAC, which are easy, and mp3, which might need:
+  - audio["title"] = mutagen.id3.TextFrame(encoding=3, text=[u"An example"])
+- (oh, these were _rips_, why did I mp3 encode them?)
+- Regardless, I should check all this, maybe even write tests for this code, har har
+
+
+
+
 RELEASES
+
 
 I think this is it:
 - Carly Rae Jepsen - Dedicated [School Boy]
