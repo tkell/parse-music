@@ -10,6 +10,10 @@
 
 RELEASES
 
+- this needs a ton of error catching / dealing with missing things
+- needs to confirm that release_details["title"] is what we want for the folder name
+  - it sometimes has artist info in it, hiss
+
 
 I think this is it:
 - Carly Rae Jepsen - Dedicated [School Boy]
