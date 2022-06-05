@@ -25,11 +25,27 @@ class StopRelease(Exception):
 
 ## DISCOGS API
 def search_discogs(artist, track, label):
+
     a = urllib.parse.quote(artist.lower())
-    t = urllib.parse.quote(track.lower())
+    # Remove beatport's habit of "original mix"
+    t = urllib.parse.quote(track.lower().replace("(original mix)", ""))
     l = urllib.parse.quote(label.lower())
     url = f"https://api.discogs.com/database/search?artist={a}&label={l}&track={t}"
-    return call_discogs_no_cache(url)
+    discogs_json = call_discogs_no_cache(url)
+
+    if len(discogs_json["results"]) == 0:
+        url = f"https://api.discogs.com/database/search?artist={a}&track={t}"
+        discogs_json = call_discogs_no_cache(url)
+
+    if len(discogs_json["results"]) == 0:
+        url = f"https://api.discogs.com/database/search?artist={a}"
+        discogs_json = call_discogs_no_cache(url)
+
+    if len(discogs_json["results"]) == 0:
+        url = f"https://api.discogs.com/database/search?track={t}"
+        discogs_json = call_discogs_no_cache(url)
+
+    return discogs_json
 
 
 def call_discogs_no_cache(url):
@@ -119,8 +135,16 @@ def interact_and_get_data(artist, track, label):
     elif action == "q":
         raise StopRelease
     elif action == "d":
+
+        ## so this is tricky, we need to do a bunch of searches
+        ## if we get an empty search result, do the next search
+        ## if we get a search result, we don't want, we want to be able to skip that search manually
+
+        ## also! once we've selected a release, if it is bad, we want to be able to go back to the previous list
+        ## and we want to be able to move to "manual entry" if we don't like any of the searches
         res = search_discogs(artist, track, label)
         return parse_releases_from_discogs(res)
+
     elif action == "e":
         return enter_data_manually(track)
 
