@@ -210,8 +210,6 @@ if __name__ == "__main__":
             except StopRelease:
                 break
 
-            break  # debug!
-
     for new_data, old_data in results:
         release_title, track_number, num_tracks, discogs_url = new_data
         filename, artist, track, label, extension = old_data
@@ -239,5 +237,3 @@ if __name__ == "__main__":
             with open(meta_path, "w") as f:
                 f.write(discogs_url)
             print("done writing, insert celebratory emojis here")
-
-        break  # debug!
