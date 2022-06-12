@@ -67,7 +67,8 @@ def interact_and_get_data(artist, track, label):
         release_details = call_discogs_no_cache(release_url)
 
         for index, track in enumerate(release_details["tracklist"]):
-            print(f"{index}, {track}")
+            title = track["title"]
+            print(f"{index}, {artist}, {title}")
 
         track_number = prompt("Enter the index for this track / '-1' to go back", int)
         if track_number == -1:
@@ -144,7 +145,6 @@ def interact_and_get_data(artist, track, label):
                 search_attempt += 1
 
         if not discogs_json or the_search_is_good == False:
-            ## and we want to be able to move to "manual entry" if we don't like any of the searches
             action = prompt("Fall back to manual entry, or skip?, 'e' or 's'?")
             if action == "e":
                 return enter_data_manually(track)
@@ -184,6 +184,35 @@ def group_by_artist_and_label(starting_letter, singles):
     return artist_and_label_groups
 
 
+def move_files(new_data, old_data):
+    release_title, track_number, num_tracks, discogs_url = new_data
+    filename, artist, track, label, extension = old_data
+
+    track_number = track_number + 1
+    folder = f"{artist} - {release_title} [{label}]".replace("/", "--")
+    new_filename = f"{track_number:02d} - {track}.{extension}"
+    meta_filename = f"{num_tracks}.tracks"
+
+    print(f"Preparing to move {filename}")
+    print(f"New folder is {folder}")
+    print(f"New track filename is {new_filename}")
+    print(f"Would write the discogs url to {meta_filename}")
+    albums_path = "/Volumes/Music/Albums/"
+    action = prompt("Write, y / n?")
+
+    if action == "y":
+        folder_path = os.path.join(albums_path, folder)
+        old_track_path = os.path.join(singles_path, filename)
+        track_path = os.path.join(folder_path, new_filename)
+        meta_path = os.path.join(folder_path, meta_filename)
+
+        os.mkdir(folder_path)
+        shutil.move(old_track_path, track_path)
+        with open(meta_path, "w") as f:
+            f.write(discogs_url)
+        print("done writing, insert celebratory emojis here")
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--starting_letter", type=str, required=True)
@@ -193,7 +222,6 @@ if __name__ == "__main__":
     artist_and_label_groups = group_by_artist_and_label(args.starting_letter, singles)
 
     # This case is "easy":  we just move the one file
-    results = []
     for key, matched_singles in artist_and_label_groups.items():
         if len(matched_singles) == 1:
             artist, label = key
@@ -204,36 +232,8 @@ if __name__ == "__main__":
                 result = interact_and_get_data(artist, track, label)
                 if result:
                     old_data = (filename, artist, track, label, extension)
-                    results.append((result, old_data))
+                    move_files(result, old_data)
             except SkipRelease:
                 next
             except StopRelease:
                 break
-
-    for new_data, old_data in results:
-        release_title, track_number, num_tracks, discogs_url = new_data
-        filename, artist, track, label, extension = old_data
-
-        track_number = track_number + 1
-        folder = f"{artist} - {release_title} [{label}]".replace("/", "--")
-        new_filename = f"{track_number:02d} - {track}.{extension}"
-        meta_filename = f"{num_tracks}.tracks"
-
-        print(f"Preparing to move {filename}")
-        print(f"New folder is {folder}")
-        print(f"New track filename is {new_filename}")
-        print(f"Would write the discogs url to {meta_filename}")
-        albums_path = "/Volumes/Music/Albums/"
-        action = prompt("Write, y / n?")
-
-        if action == "y":
-            folder_path = os.path.join(albums_path, folder)
-            old_track_path = os.path.join(singles_path, filename)
-            track_path = os.path.join(folder_path, new_filename)
-            meta_path = os.path.join(folder_path, meta_filename)
-
-            os.mkdir(folder_path)
-            shutil.move(old_track_path, track_path)
-            with open(meta_path, "w") as f:
-                f.write(discogs_url)
-            print("done writing, insert celebratory emojis here")
