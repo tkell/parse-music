@@ -24,6 +24,12 @@ I think this is it:
   - cover.jpg
   - discogs_metadata.json
 
+
+- or just 01 - Julien.flac, and then a discogs_urls.txt?
+or "20.tracks" and "discogs-urls.txt"
+- I don't really want to enter 20 tracks by hand for the inevitable V/A release that is not on discogs
+- And I do trust myself to have picked the right tracks
+
 How do I group these?
 - Collect every file in /Singles
 - Group by artist and label, give each a number
