@@ -2,6 +2,7 @@ import argparse
 import os
 import random
 import re
+import shutil
 import urllib.parse
 from collections import defaultdict
 
@@ -54,17 +55,10 @@ def interact_and_get_data(artist, track, label):
     def enter_data_manually(track):
         release_title = prompt("Enter the title for this release")
         discogs_url = prompt("Enter the discogs url for this release")
-        num_tracks = prompt("How many tracks do we have?")
-        track_number = prompt("Enter the track number for this track")
+        num_tracks = prompt("How many tracks do we have?", int)
+        track_number = prompt("Enter the track index for this track", int)
 
-        tracklist = []
-        for i in range(0, num_tracks - 1):
-            if i != track_number:
-                track_title = prompt(f"Enter the track title for track {i}")
-                tracklist.append(track_title)
-        # insert our track!
-        tracklist.insert(track_number - 1, track)
-        return release_title, track_number, tracklist, discogs_url
+        return release_title, track_number, num_tracks, discogs_url
 
     def parse_releases_from_discogs(discogs_json):
         release_number = prompt("Select a release", int)
@@ -81,10 +75,10 @@ def interact_and_get_data(artist, track, label):
             return None
 
         track_number = int(track_number)
-        tracklist = [track["title"] for track in release_details["tracklist"]]
+        num_tracks = len(release_details["tracklist"])
         discogs_url = release_details["uri"]
         release_title = release_details["title"]
-        return release_title, track_number, tracklist, discogs_url
+        return release_title, track_number, num_tracks, discogs_url
 
     def print_discogs_releases(index, release):
         label = release.get("label", "label missing")
@@ -170,7 +164,7 @@ def interact_and_get_data(artist, track, label):
         return enter_data_manually(track)
 
 
-def group_by_artist_and_label(singles):
+def group_by_artist_and_label(starting_letter, singles):
     def is_music_file(filename):
         return filename.endswith(".mp3") or filename.endswith(".flac")
 
@@ -196,7 +190,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     singles = os.listdir(singles_path)
-    artist_and_label_groups = group_by_artist_and_label(singles)
+    artist_and_label_groups = group_by_artist_and_label(args.starting_letter, singles)
 
     # This case is "easy":  we just move the one file
     results = []
@@ -205,10 +199,11 @@ if __name__ == "__main__":
             artist, label = key
             filename = matched_singles[0]
             track = filename.split(" - ")[1].split(" [")[0]
+            extension = filename.split(".")[-1]
             try:
                 result = interact_and_get_data(artist, track, label)
                 if result:
-                    old_data = (filename, artist, track, label)
+                    old_data = (filename, artist, track, label, extension)
                     results.append((result, old_data))
             except SkipRelease:
                 next
@@ -218,23 +213,31 @@ if __name__ == "__main__":
             break  # debug!
 
     for new_data, old_data in results:
-        release_title, track_number, tracklist, discogs_url = new_data
-        filename, artist, track, label = old_data
+        release_title, track_number, num_tracks, discogs_url = new_data
+        filename, artist, track, label, extension = old_data
 
         track_number = track_number + 1
-
-        folder = f"{artist} - {release_title} [{label}]"
-        new_filename = f"{track_number:02d} - {track}"
+        folder = f"{artist} - {release_title} [{label}]".replace("/", "--")
+        new_filename = f"{track_number:02d} - {track}.{extension}"
+        meta_filename = f"{num_tracks}.tracks"
 
         print(f"Preparing to move {filename}")
         print(f"New folder is {folder}")
         print(f"New track filename is {new_filename}")
+        print(f"Would write the discogs url to {meta_filename}")
+        albums_path = "/Volumes/Music/Albums/"
+        action = prompt("Write, y / n?")
 
-        # Doooo I actually want to make markers? Or just link the discogs_url, hmm
+        if action == "y":
+            folder_path = os.path.join(albums_path, folder)
+            old_track_path = os.path.join(singles_path, filename)
+            track_path = os.path.join(folder_path, new_filename)
+            meta_path = os.path.join(folder_path, meta_filename)
 
-    # hey, now do something with release_title, track_number, tracklist, and discogs_url!
-    # specifially:
-    # make a new folder called release_title
-    # move filename in there, named "01 - track", based on track_number
-    # for the other tracks, make "02 - track.marker"
-    # make a discogs_url.txt file, and write the url to it
+            os.mkdir(folder_path)
+            shutil.move(old_track_path, track_path)
+            with open(meta_path, "w") as f:
+                f.write(discogs_url)
+            print("done writing, insert celebratory emojis here")
+
+        break  # debug!
