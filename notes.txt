@@ -10,6 +10,9 @@
 
 RELEASES
 
+- this needs a ton of error catching / dealing with missing things
+- needs to confirm that release_details["title"] is what we want for the folder name
+  - it sometimes has artist info in it, hiss
 
 I think this is it:
 - Carly Rae Jepsen - Dedicated [School Boy]
@@ -20,17 +23,12 @@ I think this is it:
   - cover.jpg
   - discogs_metadata.json
 
-How do I group these?
-- Collect every file in /Singles
-- Group by artist and label, give each a number
-- group, say, 2, 4, 8
-  - maybe wire in a discogs search?
-  - enter a an album name
-  - move to /Releases/<artist> - <album> - [<label>]
-  - hey hey, call Discogs, get the meta, fill in the markers here!
-    - (this is hard, blregh)
-  - move files with proper names (01 - track, 02 - track (remix), etc)
-- repeat until we're out of file for that artist!
+
+- or just 01 - Julien.flac, and then a discogs_urls.txt?
+- or "20.tracks" and "discogs-urls.txt"
+- I don't really want to enter 20 tracks by hand for the inevitable V/A release that is not on discogs
+- And I do trust myself to have picked the right tracks, hmm
+- about 70% of tracks are legit singles!
     
 Oh, ugh, first I need to update the current parser to do this, hiss
 - hmm, or we could just run the above grouper on `parsed`?
