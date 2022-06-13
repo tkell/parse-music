@@ -11,7 +11,7 @@ import pyperclip
 
 ## SETUP AND CONSTANTS
 label_regex = r"[(.*)]"
-singles_path = "/Volumes/Music/Singles/"
+SINGLES_PATH = "/Volumes/Music/Singles/"
 with open("discogs-token.txt") as f:
     discogs_token = f.readline().strip()
 
@@ -70,16 +70,17 @@ def interact_and_get_data(artist, track, label):
             title = track["title"]
             print(f"{index}, {artist}, {title}")
 
-        track_number = prompt("Enter the index for this track / '-1' to go back", int)
-        if track_number == -1:
+        track_numbers = prompt("Enter the index for this track / '-1' to go back", str)
+        if track_numbers == "-1":
             # this is our "we did not like this release" state!
             return None
+        else:
+            track_numbers = list(map(int, track_numbers.split(",")))
 
-        track_number = int(track_number)
         num_tracks = len(release_details["tracklist"])
         discogs_url = release_details["uri"]
         release_title = release_details["title"]
-        return release_title, track_number, num_tracks, discogs_url
+        return release_title, track_numbers, num_tracks, discogs_url
 
     def print_discogs_releases(index, release):
         label = release.get("label", "label missing")
@@ -184,33 +185,40 @@ def group_by_artist_and_label(starting_letter, singles):
     return artist_and_label_groups
 
 
-def move_files(new_data, old_data):
+def create_folder_and_meta(new_data, artist, label):
     release_title, track_number, num_tracks, discogs_url = new_data
-    filename, artist, track, label, extension = old_data
 
-    track_number = track_number + 1
     folder = f"{artist} - {release_title} [{label}]".replace("/", "--")
-    new_filename = f"{track_number:02d} - {track}.{extension}"
     meta_filename = f"{num_tracks}.tracks"
 
-    print(f"Preparing to move {filename}")
     print(f"New folder is {folder}")
-    print(f"New track filename is {new_filename}")
     print(f"Would write the discogs url to {meta_filename}")
     albums_path = "/Volumes/Music/Albums/"
     action = prompt("Write, y / n?")
 
     if action == "y":
         folder_path = os.path.join(albums_path, folder)
-        old_track_path = os.path.join(singles_path, filename)
-        track_path = os.path.join(folder_path, new_filename)
         meta_path = os.path.join(folder_path, meta_filename)
-
         os.mkdir(folder_path)
-        shutil.move(old_track_path, track_path)
         with open(meta_path, "w") as f:
             f.write(discogs_url)
-        print("done writing, insert celebratory emojis here")
+
+    return folder_path
+
+
+def move_file(folder_path, new_data, old_data):
+    release_title, track_number, num_tracks, discogs_url = new_data
+    filename, artist, track, label, extension = old_data
+    track_number = track_number + 1
+    new_filename = f"{track_number:02d} - {track}.{extension}"
+
+    old_track_path = os.path.join(SINGLES_PATH, filename)
+    track_path = os.path.join(folder_path, new_filename)
+
+    print(f"Preparing to move {filename} to {track_path}")
+    action = prompt("Write, y / n?")
+    if action == "y":
+        shutil.move(old_track_path, track_path)
 
 
 if __name__ == "__main__":
@@ -218,7 +226,7 @@ if __name__ == "__main__":
     parser.add_argument("--starting_letter", type=str, required=True)
     args = parser.parse_args()
 
-    singles = os.listdir(singles_path)
+    singles = os.listdir(SINGLES_PATH)
     artist_and_label_groups = group_by_artist_and_label(args.starting_letter, singles)
 
     # This case is "easy":  we just move the one file
@@ -231,8 +239,45 @@ if __name__ == "__main__":
             try:
                 result = interact_and_get_data(artist, track, label)
                 if result:
+                    folder_path = create_folder_and_meta(result, artist, label)
                     old_data = (filename, artist, track, label, extension)
-                    move_files(result, old_data)
+                    release_title, track_numbers, num_tracks, discogs_url = result
+                    new_data = (
+                        release_title,
+                        track_numbers[0],
+                        num_tracks,
+                        discogs_url,
+                    )
+                    move_file(folder_path, new_data, old_data)
+                    print("done writing, insert celebratory emojis here")
+            except SkipRelease:
+                next
+            except StopRelease:
+                break
+        else:
+            artist, label = key
+            print("multiple tracks:  ", matched_singles)
+            filename = matched_singles[0]
+            first_track = filename.split(" - ")[1].split(" [")[0]
+            try:
+                result = interact_and_get_data(artist, first_track, label)
+                if result:
+                    folder_path = create_folder_and_meta(result, artist, label)
+
+                    release_title, track_numbers, num_tracks, discogs_url = result
+                    for track_number, filename in zip(track_numbers, matched_singles):
+                        track = filename.split(" - ")[1].split(" [")[0]
+                        extension = filename.split(".")[-1]
+                        old_data = (filename, artist, track, label, extension)
+                        new_data = (
+                            release_title,
+                            track_number,
+                            num_tracks,
+                            discogs_url,
+                        )
+
+                        move_file(folder_path, new_data, old_data)
+                    print("done writing, insert celebratory emojis here")
             except SkipRelease:
                 next
             except StopRelease:
