@@ -57,6 +57,7 @@ def interact_and_get_data(artist, track, label):
         discogs_url = prompt("Enter the discogs url for this release")
         num_tracks = prompt("How many tracks do we have?", int)
         track_number = prompt("Enter the track index for this track", int)
+        track_number = [track_number]
 
         return release_title, track_number, num_tracks, discogs_url
 
