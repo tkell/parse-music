@@ -257,7 +257,9 @@ if __name__ == "__main__":
                 break
         else:
             artist, label = key
-            print("multiple tracks:  ", matched_singles)
+            matched_singles.sort()
+            print("Matched multiple tracks:  ", matched_singles)
+            print("")
             filename = matched_singles[0]
             first_track = filename.split(" - ")[1].split(" [")[0]
             try:
