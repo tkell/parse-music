@@ -189,7 +189,7 @@ def group_by_artist_and_label(starting_letter, singles):
 def create_folder_and_meta(new_data, artist, label):
     release_title, track_number, num_tracks, discogs_url = new_data
 
-    folder = f"{artist} - {release_title} [{label}]".replace("/", "--")
+    folder = f"{artist} - {release_title} [{label}]".replace("/", ":")
     meta_filename = f"{num_tracks}.tracks"
 
     print(f"New folder is {folder}")
