@@ -56,10 +56,10 @@ def interact_and_get_data(artist, track, label):
         release_title = prompt("Enter the title for this release")
         discogs_url = prompt("Enter the discogs url for this release")
         num_tracks = prompt("How many tracks do we have?", int)
-        track_number = prompt("Enter the track index for this track", int)
-        track_number = [track_number]
+        track_numbers = prompt("Enter the track index for this track(s)", str)
+        track_numbers = list(map(int, track_numbers.split(",")))
 
-        return release_title, track_number, num_tracks, discogs_url
+        return release_title, track_numbers, num_tracks, discogs_url
 
     def parse_releases_from_discogs(discogs_json):
         release_number = prompt("Select a release", int)
@@ -71,7 +71,7 @@ def interact_and_get_data(artist, track, label):
             title = track["title"]
             print(f"{index}, {artist}, {title}")
 
-        track_numbers = prompt("Enter the index for this track / '-1' to go back", str)
+        track_numbers = prompt("Enter the track index(es) / '-1' to go back", str)
         if track_numbers == "-1":
             # this is our "we did not like this release" state!
             return None
@@ -258,6 +258,7 @@ if __name__ == "__main__":
         else:
             artist, label = key
             matched_singles.sort()
+            print("")
             print("Matched multiple tracks:  ", matched_singles)
             print("")
             filename = matched_singles[0]
