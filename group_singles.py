@@ -229,6 +229,7 @@ if __name__ == "__main__":
 
     singles = os.listdir(SINGLES_PATH)
     artist_and_label_groups = group_by_artist_and_label(args.starting_letter, singles)
+    print(f"*** {len(artist_and_label_groups.items())} to go **")
 
     # This case is "easy":  we just move the one file
     for key, matched_singles in artist_and_label_groups.items():
