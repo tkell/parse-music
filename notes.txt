@@ -5,31 +5,10 @@
 - (oh, these were _rips_, why did I mp3 encode them?)
 - Regardless, I should check all this, maybe even write tests for this code, har har
 
-
+Folks at work recommend Musicbrainz / Picard, I should try this for cover art!
 
 
 RELEASES
-
-- this needs a ton of error catching / dealing with missing things
-- needs to confirm that release_details["title"] is what we want for the folder name
-  - it sometimes has artist info in it, hiss
-
-I think this is it:
-- Carly Rae Jepsen - Dedicated [School Boy]
-  - 01 - Julien.flac
-  ...
-  - 05 - Everything He Needs.marker
-  ...
-  - cover.jpg
-  - discogs_metadata.json
-
-
-- or just 01 - Julien.flac, and then a discogs_urls.txt?
-- or "20.tracks" and "discogs-urls.txt"
-- I don't really want to enter 20 tracks by hand for the inevitable V/A release that is not on discogs
-- And I do trust myself to have picked the right tracks, hmm
-- about 70% of tracks are legit singles!
-    
 Oh, ugh, first I need to update the current parser to do this, hiss
 - hmm, or we could just run the above grouper on `parsed`?
 - That feels a bit dodgy, but it is nice, I think
