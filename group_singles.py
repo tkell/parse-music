@@ -1,4 +1,3 @@
-import argparse
 import os
 import random
 import re
@@ -11,7 +10,8 @@ import pyperclip
 
 ## SETUP AND CONSTANTS
 label_regex = r"[(.*)]"
-SINGLES_PATH = "/Volumes/Music/Singles/"
+OLD_PATH = "/Users/thor/Desktop/parsed/singles"
+NEW_PATH = "/Users/thor/Desktop/parsed/albums"
 with open("discogs-token.txt") as f:
     discogs_token = f.readline().strip()
 
@@ -166,12 +166,9 @@ def interact_and_get_data(artist, track, label):
         return enter_data_manually(track)
 
 
-def group_by_artist_and_label(starting_letter, singles):
+def group_by_artist_and_label(singles):
     def is_music_file(filename):
         return filename.endswith(".mp3") or filename.endswith(".flac")
-
-    def starts_with(filename, letter):
-        return filename.lower().startswith(letter.lower())
 
     def key_by_artist_and_label(single):
         artist = single.split(" - ")[0]
@@ -180,7 +177,7 @@ def group_by_artist_and_label(starting_letter, singles):
 
     artist_and_label_groups = defaultdict(list)
     for single in singles:
-        if starts_with(single, args.starting_letter) and is_music_file(single):
+        if is_music_file(single):
             key = key_by_artist_and_label(single)
             artist_and_label_groups[key].append(single)
     return artist_and_label_groups
@@ -194,11 +191,10 @@ def create_folder_and_meta(new_data, artist, label):
 
     print(f"New folder is {folder}")
     print(f"Would write the discogs url to {meta_filename}")
-    albums_path = "/Volumes/Music/Albums/"
     action = prompt("Write, y / n?")
 
     if action == "y":
-        folder_path = os.path.join(albums_path, folder)
+        folder_path = os.path.join(NEW_PATH, folder)
         meta_path = os.path.join(folder_path, meta_filename)
         os.mkdir(folder_path)
         with open(meta_path, "w") as f:
@@ -213,7 +209,7 @@ def move_file(folder_path, new_data, old_data):
     track_number = track_number + 1
     new_filename = f"{track_number:02d} - {track}.{extension}"
 
-    old_track_path = os.path.join(SINGLES_PATH, filename)
+    old_track_path = os.path.join(OLD_PATH, filename)
     track_path = os.path.join(folder_path, new_filename)
 
     print(f"Preparing to move {filename} to {track_path}")
@@ -223,12 +219,8 @@ def move_file(folder_path, new_data, old_data):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--starting_letter", type=str, required=True)
-    args = parser.parse_args()
-
-    singles = os.listdir(SINGLES_PATH)
-    artist_and_label_groups = group_by_artist_and_label(args.starting_letter, singles)
+    singles = os.listdir(OLD_PATH)
+    artist_and_label_groups = group_by_artist_and_label(singles)
     print(f"*** {len(artist_and_label_groups.items())} to go **")
 
     # This case is "easy":  we just move the one file
