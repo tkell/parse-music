@@ -10,7 +10,7 @@ Folks at work recommend Musicbrainz / Picard, I should try this for cover art!
 
 RELEASES
 Oh, ugh, first I need to update the current parser to do this, hiss
-- hmm, or we could just run the above grouper on `parsed`?
+- hmm, or we could just run the grouper on `parsed`?
 - That feels a bit dodgy, but it is nice, I think
 - it means if we have 3 very disparate tracks from one release, we can just put 'em together
 
