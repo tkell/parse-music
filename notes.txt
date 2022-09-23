@@ -1,16 +1,11 @@
-## Tech debt game
+# Purpose
+- This lib now just gives things correct metadata, but does not group singles into albums
+  That requires a discogs lookup, so it is in the other folder
+ 
+# Tech debt
 - I shoud upgrade mutagen to latest, and then make sure it works with FLAC and mp3
 - tag_utils might need a rewrite to case on FLAC, which are easy, and mp3, which might need:
   - audio["title"] = mutagen.id3.TextFrame(encoding=3, text=[u"An example"])
 - (oh, these were _rips_, why did I mp3 encode them?)
 - Regardless, I should check all this, maybe even write tests for this code, har har
-
-Folks at work recommend Musicbrainz / Picard, I should try this for cover art!
-
-
-RELEASES
-Oh, ugh, first I need to update the current parser to do this, hiss
-- hmm, or we could just run the grouper on `parsed`?
-- That feels a bit dodgy, but it is nice, I think
-- it means if we have 3 very disparate tracks from one release, we can just put 'em together
 
