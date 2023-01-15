@@ -88,12 +88,17 @@ class Parser:
             else:
                 return regex.match(filename).group(field)
         except (AttributeError, IndexError):
-            print(
-                "---- No data in %s for %s.  Please enter the correct string ----"
-                % (path, field)
-            )
-            r = input()
-            return r.strip()
+            if field == "track_number" and (
+                path.endswith(".jpg") or path.endswith(".pdf")
+            ):
+                return "999"
+            else:
+                print(
+                    "---- No data in %s for %s.  Please enter the correct string ----"
+                    % (path, field)
+                )
+                r = input()
+                return r.strip()
 
 
 def build_parsers():
