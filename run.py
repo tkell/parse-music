@@ -14,9 +14,9 @@ if __name__ == "__main__":
     parser.add_argument("--dry_run", help="Dry run", action="store_true")
     args = parser.parse_args()
     if args.dry_run:
-        print("Launching dry run, not doing work.")
+        print("Launching dry run of parse.py, not doing work.")
     else:
-        print("Launching regular run...")
+        print("Launching regular run of parse.py...")
 
     parse_singles(
         "/Users/thor/Desktop/unparsed/singles",
