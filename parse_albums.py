@@ -2,7 +2,6 @@
 # encoding: utf=8
 import os
 import shutil
-import re
 
 from parser import build_parsers
 from utils import get_context
@@ -35,7 +34,7 @@ def parse_folder(path, parsers):
         if p.match_store(album_string, source="album"):
             parser = p
             break
-    if parser == None:
+    if parser is None:
         # Eventually we'll deal with errors here,
         # allow the user to enter a store manually, etc
         print("Panic!  No parser found")
@@ -80,7 +79,7 @@ def parse_albums(starting_folder, ending_folder, dry_run):
     for folder in folders:
         folder_path, parser, context, album_info = parse_folder(folder, parsers)
         tasks = parse_files(folder_path, parser, context, album_info)
-        success = do_work(tasks, dry_run)  # rename or re-tag the files, as needed.
+        do_work(tasks, dry_run)  # rename or re-tag the files, as needed.
         if not dry_run:
             rename_folder(folder_path, context, album_info)  # very last!
 

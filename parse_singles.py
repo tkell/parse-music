@@ -4,12 +4,10 @@
 ## singles are Artist - Title (Remix) [Label]
 
 import os
-import re
 
 from utils import move_items
 from work_utils import do_work
 from work_utils import parse_file
-from tag_utils import get_tags
 
 from parser import build_parsers
 
@@ -24,7 +22,7 @@ def parse_files(filenames, folder_path, parsers):
                 if parser.match_store(filename, source="single"):
                     the_parser = parser
                     break
-            if the_parser == None:
+            if the_parser is None:
                 # panic!
                 print("NO PARSER FOUND WHAT")
                 pass
@@ -54,6 +52,6 @@ def parse_singles(starting_folder, ending_folder, dry_run):
         task = parse_file(filepath, parser, context)
         tasks.extend(task)
 
-    success = do_work(tasks, dry_run)  # rename or re-tag the files, as needed.
+    do_work(tasks, dry_run)  # rename or re-tag the files, as needed.
     if not dry_run:
         move_items(starting_folder, ending_folder)

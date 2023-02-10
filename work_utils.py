@@ -104,7 +104,7 @@ def select_work(
     else:
         # If there are tags, we rename based on the tag
         if tag_artist and tag_title:
-            extension = filepath.split(".")[-1]
+            filepath.split(".")[-1]
             new_file_name = new_name_from_tag
             folder_path = os.path.split(filepath)[0:-1][0]
             new_filepath = os.path.join(folder_path, new_file_name)
