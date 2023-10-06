@@ -24,7 +24,7 @@ class Parser:
 
     def match_store(self, path, source):
         filename = path.split(os.path.sep)[-1]
-        # check for Various Artists - not enabled for all store yet
+        # check for Various Artists - not enabled for all stores yet
         if self.store == "bandcamp":
             if source == "various_artists" and self.various_artists_regex.search(
                 filename
@@ -42,8 +42,6 @@ class Parser:
             return False
 
     def get_field(self, path, field, regex_type):
-        ## This needs to deal with tag data too, somehow.  Hrm.
-        # Give this the file path
         if regex_type == "album":
             regex = self.album_regex
         elif regex_type == "album_file":
@@ -55,9 +53,8 @@ class Parser:
         elif regex_type == "single":
             regex = self.single_regex
         else:
-            raise TypeError(
-                "regex_type must be one of album, album_file, various_artists, various_artists_file, or single!"
-            )
+            err = "regex must be album, album_file, various_artists, various_artists_file, or single!"
+            raise TypeError(err)
 
         filename = path.split(os.path.sep)[-1]
         try:
@@ -67,24 +64,11 @@ class Parser:
                 res = res.replace("_", " ").strip()
             elif self.store == "beatport":
                 res = regex.match(filename).group(field)
-                res = res.replace("_", " ").strip()
                 if field == "title":
                     if "Original Mix" in res:
                         res = res.replace("Original Mix", "").strip()
-                        return res
-                    else:
-                        # Deal with adding remix brackets
-                        print(
-                            "---- Need to add a remix bracket for %s.  Please enter the correct slice, as an integer ----"
-                            % (res)
-                        )
-                        r = input()
-                        r = int(r)
 
-                        res = res.split(" ")
-                        res[r] = "(" + res[r]
-                        res[-1] = res[-1] + ")"
-                        return " ".join(res)
+                return res
             else:
                 return regex.match(filename).group(field)
         except (AttributeError, IndexError):
@@ -104,8 +88,9 @@ class Parser:
 def build_parsers():
     parsers = []
 
-    # name, album_regex, album_file_regex, single_regex, various_artists_regex, various_artists_file_regex
-    # Order matters here!
+    # Parser order matters here, I should improve this
+    # name, album_regex, album_file_regex,
+    # single_regex, various_artists_regex, various_artists_file_regex
     data = [
         # www.amazon.com, needs to be first because of the AMAZON prepend
         (
@@ -125,6 +110,15 @@ def build_parsers():
             "NO EXAMPLES YET",
             "NO EXAMPLES YET",
         ),
+        # www.beatport.com
+        (
+            "beatport",
+            r"NO EXAMPLES YET",
+            r"NO EXAMPLES YET",
+            r"(?P<artist>.+?) - (?P<title>.+?) \[(?P<label>.+?)\]\.(?P<extension>.+)",
+            "NO EXAMPLES YET",
+            "NO EXAMPLES YET",
+        ),
         # www.bandcamp.com
         (
             "bandcamp",
@@ -140,15 +134,6 @@ def build_parsers():
             r"(?P<artist>.+?) - (?P<album_title>.+?) - (?P<extension>.+)",
             r"(?P<album_title>.+?)-(?P<track_number>\d\d\d)-(?P<artist>.+?)-(?P<title>.+?)\.(?P<extension>.+)",
             r"(?P<album_title>.+?)-\d\d\d-(?P<artist>.+?)-(?P<title>.+?)\.(?P<extension>.+)",
-            "NO EXAMPLES YET",
-            "NO EXAMPLES YET",
-        ),
-        # www.beatport.com
-        (
-            "beatport",
-            r"NO EXAMPLES YET",
-            r"NO EXAMPLES YET",
-            r"(\d.+?_)(?P<title>.+?)\.(?P<extension>.+)",
             "NO EXAMPLES YET",
             "NO EXAMPLES YET",
         ),
