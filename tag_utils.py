@@ -32,7 +32,12 @@ def get_tags(filepath):
 
 
 def set_tag(filepath, tag_name, tag_content):
+    if filepath.endswith("mp3"):
+        tag_data = mutagen.id3.TextFrame(encoding=3, text=[f"{tag_content}"])
+    else:
+        tag_data = tag_content
+
     f = mutagen.File(filepath)
     tag_name = tag_name.lower()
-    f[tag_name] = tag_content
+    f[tag_name] = tag_data
     f.save()
