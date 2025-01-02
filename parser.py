@@ -119,15 +119,6 @@ def build_parsers():
             "NO EXAMPLES YET",
             "NO EXAMPLES YET",
         ),
-        # www.bandcamp.com
-        (
-            "bandcamp",
-            r"(?P<artist>.+?) - (?P<album_title>.+)",
-            r"(?P<artist>.+?) - (?P<album_title>.+?) - (?P<track_number>\d\d) (?P<title>.+?)\.(?P<extension>.+)",
-            r"(?P<artist>.+?) - (?P<title>.+?)\.(?P<extension>.+)",
-            r"Various Artists - (?P<album_title>.+)",
-            r"(?P<artist>.+?) - (?P<album_title>.+?) - (?P<track_number>\d\d) (?P<title>.+?)\.(?P<extension>.+)",
-        ),
         # www.bleep.com
         (
             "bleep",
@@ -136,6 +127,15 @@ def build_parsers():
             r"(?P<album_title>.+?)-\d\d\d-(?P<artist>.+?)-(?P<title>.+?)\.(?P<extension>.+)",
             "NO EXAMPLES YET",
             "NO EXAMPLES YET",
+        ),
+        # www.bandcamp.com
+        (
+            "bandcamp",
+            r"(?P<artist>.+?) - (?P<album_title>.+)",
+            r"(?P<artist>.+?) - (?P<album_title>.+?) - (?P<track_number>\d\d) (?P<title>.+?)\.(?P<extension>.+)",
+            r"(?P<artist>.+?) - (?P<title>.+?)\.(?P<extension>.+)",
+            r"Various Artists - (?P<album_title>.+)",
+            r"(?P<artist>.+?) - (?P<album_title>.+?) - (?P<track_number>\d\d) (?P<title>.+?)\.(?P<extension>.+)",
         ),
         # www.junodownload.com
         (

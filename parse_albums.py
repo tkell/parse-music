@@ -63,14 +63,13 @@ def parse_files(folder_path, parser, context, album_info):
 
 
 def rename_folder(folder_path, context, album_info):
-    if context == "regular_album":
-        artist = album_info["artist"]
-        title = album_info["album_title"]
-        label = album_info["label"]
-        new_folder_name = "%s - %s [%s]" % (artist, title, label)
-        path = os.path.dirname(folder_path)
-        new_path = os.path.join(path, new_folder_name)
-        shutil.move(folder_path, new_path)
+    artist = album_info["artist"]
+    title = album_info["album_title"]
+    label = album_info["label"]
+    new_folder_name = "%s - %s [%s]" % (artist, title, label)
+    path = os.path.dirname(folder_path)
+    new_path = os.path.join(path, new_folder_name)
+    shutil.move(folder_path, new_path)
 
 
 def parse_albums(starting_folder, ending_folder, dry_run):
