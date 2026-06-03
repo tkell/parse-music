@@ -11,7 +11,6 @@ to single files, e.g. 'Floorplan - So Glad'.
 Mostly used when taking Serato crates on the go
 as flat folders!
 """
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Rename Files For Djing")
     parser.add_argument("--folder", type=str, help="Path to folder to rename files in")
